@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   contact:
     name: Ukpik API
-    url: "https://jalgos.com/#contact"
+    url: 'https://jalgos.com/#contact'
     x-twitter: JalgosAI
   description: |
     Description of Ukpik RESTful API.
@@ -11,13 +11,14 @@ info:
       * Ukpik service does not support [cross origin headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
       for security reasons, therefore it is not possible to use Swagger UI and make API calls directly from browser.
 
-    Last update: 2020-02-20
-  termsOfService: "https://jalgos.com/"
+    Last update: 2020-03-25
+  termsOfService: 'https://jalgos.com/'
   title: Ukpik API
   version: 1.0.0
   x-apisguru-categories:
     - vision
   x-preferred: true
+
 servers:
   - url: https://vision.ukpik.ai/v1
     description: Ukpik Vision API v1 (production)
@@ -25,24 +26,24 @@ servers:
 tags:
   - description: Classification
     name: classify
-  - description: Labeling
-    name: labels
-  - description: Result
-    name: result
   - description: System
     name: system
 
 paths:
   /version:
     get:
-      summary: Returns current build version and node information for API service.
+      tags:
+      - system
+      operationId: version
+      summary: Current build version
+      description: Returns current build version and node information for API service.
       responses:
-        "200":
+        '200':
           description: A JSON object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/version"
+                $ref: '#/components/schemas/Version'
               example:
                 {
                   "tag": "8218",
@@ -50,11 +51,157 @@ paths:
                   "pod": "pub-677656cfc9-7tqc2",
                   "build_at": "Wed Mar 25 10:28:17 UTC 2020",
                   "model": "prod.model.fit.fabien.20191018004336.rds",
-                  "namespace": "kiwatch",
+                  "namespace": "production"
                 }
 
+  /label:
+    post:
       tags:
-        - system
+      - classify
+      parameters:
+        - $ref: "#/components/parameters/analyse_id"
+      operationId: label
+      summary: Label classified video by operator
+      description: Set operators' labels to video
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                labels:
+                  $ref: '#/components/schemas/LabelsRequest'
+            examples:
+              labels.json:
+                externalValue: 'https://raw.githubusercontent.com/jalgos/ukpik-api-docs/master/bin/labels.json'
+      responses:
+        '200':
+          description: A JSON object with information about updated labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabelsResponse'
+              example:
+                {
+                  "analyse_id": 1254448,
+                  "labels": {
+                    "op_qualification_1": "VN0000",
+                    "op_qualification_2": "VN1001"
+                  },
+                  "labels_op": [
+                    "VN0000",
+                    "VN1001"
+                  ],
+                  "request": {
+                    "op_qualification_1": "VN0000",
+                    "op_qualification_2": "VN1001"
+                  },
+                  "version": {
+                    "tag": "8218",
+                    "node": "ukpik-fast-4",
+                    "pod": "pub-677656cfc9-mdbk8",
+                    "build_at": "Wed Mar 25 10:28:17 UTC 2020",
+                    "model": "prod.model.fit.fabien.20191018004336.rds",
+                    "namespace": "production"
+                  },
+                  "accepted_at": "2020-03-25T15:49:20.014554806Z"
+                }
+
+  /result:
+    get:
+      tags:
+      - classify
+      parameters:
+        - $ref: "#/components/parameters/analyse_id"
+      operationId: result
+      summary: Returns classification result
+      description: Returns video classification result by analyse_id parameter
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: A JSON object with classification result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+              example:
+                {
+                  "human_labels": {
+                    "op_qualification_1": "VN0000",
+                    "op_qualification_2": "VN1001"
+                  },
+                  "score_details": {
+                    "p_NOTHING": 0.2359,
+                    "p_animal": 0.0888,
+                    "p_flag": 0.0485,
+                    "p_intrusion": 0.5037,
+                    "p_person": 0.7994,
+                    "p_plant": 0.0256,
+                    "p_rain": 0.0262,
+                    "p_spider": 0.0485,
+                    "p_text": 0.64,
+                    "p_vehicule": 0.188,
+                    "p_web": 0.0212,
+                    "p_wind": 0.0182
+                  },
+                  "jalgos_received": 1585146836.5311,
+                  "analyse_id": 1254448,
+                  "error_code": 0,
+                  "error_msg": "",
+                  "status_classification": "success",
+                  "done_classif_ts": 1585146890.5978,
+                  "jalgos_classified": "2020-03-25T14:34:50.597800016Z",
+                  "label": "Not classified",
+                  "version": {
+                    "tag": "8218",
+                    "node": "ukpik-fast-4",
+                    "pod": "pub-677656cfc9-mdbk8",
+                    "build_at": "Wed Mar 25 10:28:17 UTC 2020",
+                    "model": "prod.model.fit.fabien.20191018004336.rds",
+                    "namespace": "kiwatch"
+                  }
+                }
+
+  /classify:
+    post:
+      tags:
+      - classify
+      operationId: classify
+      summary: Send video for classification
+      description: Receives video, JSON metadata and send video to classification queue.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                metadata:
+                  $ref: '#/components/schemas/Metadata'
+                video:
+                  type: string
+                  format: binary
+            examples:
+              metadata.json:
+                externalValue: 'https://raw.githubusercontent.com/jalgos/ukpik-api-docs/master/bin/metadata.json'
+      responses:
+        '200':
+          description: A JSON object with information about received video status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Version'
+              example:
+                {
+                  "tag": "8218",
+                  "node": "ukpik-node1",
+                  "pod": "pub-677656cfc9-7tqc2",
+                  "build_at": "Wed Mar 25 10:28:17 UTC 2020",
+                  "model": "prod.model.fit.fabien.20191018004336.rds",
+                  "namespace": "production"
+                }
 
 components:
   securitySchemes:
@@ -64,8 +211,16 @@ components:
     BearerAuth:
       type: http
       scheme: bearer
+  parameters:
+    analyse_id:
+      in: path
+      name: analyse_id
+      schema:
+        type: integer
+      required: true
+      description: Numeric ID of the video analyse
   schemas:
-    version:
+    Version:
       type: object
       properties:
         tag:
@@ -86,3 +241,83 @@ components:
         namespace:
           type: string
           description: Kubernetes namespace
+
+    LabelsRequest:
+      type: object
+      required:
+        - op_qualification_1
+      properties:
+        op_qualification_1:
+          type: string
+        op_qualification_2:
+          type: string
+        op_qualification_3:
+          type: string
+        op_qualification_4:
+          type: string
+
+    LabelsResponse:
+      type: object
+      properties:
+        analyse_id:
+          type: number
+        labels_op:
+          type: array
+          items:
+            type: string
+        request:
+          $ref: '#/components/schemas/LabelsRequest'
+        version:
+          $ref: '#/components/schemas/Version'
+        accepted_at:
+          type: string
+          format: date-time
+
+    Result:
+      type: object
+      properties:
+        human_labels:
+          $ref: '#/components/schemas/LabelsRequest'
+        score_details:
+          type: object
+        analyse_id:
+          type: number
+        jalgos_received:
+          type: number
+        error_code:
+          type: number
+        error_msg:
+          type: string
+        status_classification:
+          type: string
+        done_classif_ts:
+          type: number
+        jalgos_classified:
+          type: string
+          format: data-time
+        label:
+          type: string
+        version:
+          $ref: '#/components/schemas/Version'
+
+    Metadata:
+      type: object
+      required:
+        - analyse_id
+      properties:
+        analyse_id:
+          type: number
+        client_id:
+          type: number
+        no_trans:
+          type: string
+        parc_origine:
+          type: string
+        date_recep:
+          type: string
+          format: "16-jan-2020 10:09:57"
+        code_msg:
+          type: string
+        date_start_analyse:
+          type: string
+          format: data-time
