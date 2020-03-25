@@ -1,0 +1,88 @@
+openapi: 3.0.0
+info:
+  contact:
+    name: Ukpik API
+    url: "https://jalgos.com/#contact"
+    x-twitter: JalgosAI
+  description: |
+    Description of Ukpik RESTful API.
+
+    Current limitations:
+      * Ukpik service does not support [cross origin headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
+      for security reasons, therefore it is not possible to use Swagger UI and make API calls directly from browser.
+
+    Last update: 2020-02-20
+  termsOfService: "https://jalgos.com/"
+  title: Ukpik API
+  version: 1.0.0
+  x-apisguru-categories:
+    - vision
+  x-preferred: true
+servers:
+  - url: https://vision.ukpik.ai/v1
+    description: Ukpik Vision API v1 (production)
+
+tags:
+  - description: Classification
+    name: classify
+  - description: Labeling
+    name: labels
+  - description: Result
+    name: result
+  - description: System
+    name: system
+
+paths:
+  /version:
+    get:
+      summary: Returns current build version and node information for API service.
+      responses:
+        "200":
+          description: A JSON object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/version"
+              example:
+                {
+                  "tag": "8218",
+                  "node": "ukpik-node1",
+                  "pod": "pub-677656cfc9-7tqc2",
+                  "build_at": "Wed Mar 25 10:28:17 UTC 2020",
+                  "model": "prod.model.fit.fabien.20191018004336.rds",
+                  "namespace": "kiwatch",
+                }
+
+      tags:
+        - system
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    version:
+      type: object
+      properties:
+        tag:
+          type: string
+          description: Build number from CI/CD
+        node:
+          type: string
+          description: The service instance node in the cluster
+        pod:
+          type: string
+          description: Kubernetes pod name
+        build_at:
+          type: string
+          description: Indicates when service was built
+        model:
+          type: string
+          description: Indicates the ML/AI model version
+        namespace:
+          type: string
+          description: Kubernetes namespace
