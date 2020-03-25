@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Usage
+# > bin/get-result $endpoint $analyse_id
+
+# Example
+# > bin/get-result https://vision.ukpik.ai/v1 1254448
+
+SERVER=${1:-"https://vision.ukpik.ai/v1"}
+ANALYSE_ID=${2:-"1254448"}
+
+if [[ -z "${API_KEY}" ]]; then
+  echo "API_KEY is not set. Use export API_KEY=... or .envrc to provide it"
+  exit 1
+fi
+
+ENDPOINT="$SERVER/result?analyse_id=$ANALYSE_ID"
+echo "GET $ENDPOINT"
+
+curl -X GET \
+-H "Authorization: Bearer $API_KEY" \
+-H "accept: application/json" \
+"$ENDPOINT"
+
