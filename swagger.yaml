@@ -29,7 +29,7 @@ info:
 
     Ukpik classifies videos asynchronously. The general flow is to send video to classification and receive the result by calling `/result` endpoint or using webhook.
 
-    The `error` field should be zero for successful and non zero for errors.
+    The `error` field should be zero for successful results and non zero for errors.
 
 
     Last update: 2020-03-26
