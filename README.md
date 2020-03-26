@@ -2,8 +2,8 @@
 
 The API documentation is based on [OpenAPI 3.0.0](https://swagger.io/).
 
-The API server: [https://vision.ukpik.ai/v1](https://vision.ukpik.ai/v1)
-The API documentation website [https://docs.ukpik.ai](https://docs.ukpik.ai)
+- API server: [https://vision.ukpik.ai/v1](https://vision.ukpik.ai/v1)
+- API documentation website [https://docs.ukpik.ai](https://docs.ukpik.ai)
 
 ## Work with API
 
@@ -55,3 +55,7 @@ Example
 ```bash
 bin/post-labels https://vision.ukpik.ai/v1 1254448 bin/labels.json
 ```
+
+## Licenses
+
+An example `bin/video.mov` is a part of [The VIRAT Video Dataset](https://viratdata.org/)
