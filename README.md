@@ -33,13 +33,16 @@ export API_KEY="YOUR API KEY"
 Usage
 
 ```bash
-bin/post-video $endpoint $analyse_id $video_path $metadata_path
+bin/post-video [video_path] [analyse_id] [metadata_path]
 ```
 
-Example
+Examples
 
 ```bash
-bin/post-video https://vision.ukpik.ai/v1 1254448 bin/video.mov bin/metadata.json
+bin/post-video
+bin/post-video bin/video.mov
+bin/post-video bin/video.mov 1254448
+bin/post-video bin/video.mov 1254448 bin/metadata.jsonjson
 ```
 
 ### Get results
@@ -47,13 +50,13 @@ bin/post-video https://vision.ukpik.ai/v1 1254448 bin/video.mov bin/metadata.jso
 Usage
 
 ```bash
-bin/post-labels $server $analyse_id $labels_path
+bin/get-result analyse_id
 ```
 
 Example
 
 ```bash
-bin/post-labels https://vision.ukpik.ai/v1 1254448 bin/labels.json
+bin/get-result 1254448
 ```
 
 ## Licenses

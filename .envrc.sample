@@ -1,1 +1,2 @@
 export API_KEY=
+export API_SERVER=https://vision.ukpik.ai/v1

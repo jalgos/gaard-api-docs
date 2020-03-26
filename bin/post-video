@@ -1,23 +1,25 @@
 #!/bin/bash
 
 # Usage
-# > bin/post-video $endpoint $analyse_id $video_path $metadata_path
+# > bin/post-video [video_path] [analyse_id] [metadata_path]
 
-# Example
-# > bin/post-video https://vision.ukpik.ai/v1 1254448 bin/video.mov bin/metadata.json
+# Examples
+# > bin/post-video
+# > bin/post-video bin/video.mov
+# > bin/post-video bin/video.mov 1254448
+# > bin/post-video bin/video.mov 1254448 bin/metadata.json
 
-SERVER=${1:-"https://vision.ukpik.ai/v1"}
-ANALYSE_ID=${2:-"1254448"}
-VIDEO=${3:-"bin/video.mov"}
-METADATA=${4:-"bin/metadata.json"}
+API_SERVER=${API_SERVER:="https://vision.ukpik.ai/v1"}
+VIDEO=${1:-"bin/video.mov"}
+ANALYSE_ID=$2
+METADATA=${3:-"bin/metadata.json"}
 
 if [[ -z "${API_KEY}" ]]; then
   echo "API_KEY is not set. Use export API_KEY=... or .envrc to provide it"
   exit 1
 fi
 
-ENDPOINT="$SERVER/classify?analyse_id=$ANALYSE_ID"
-echo "POST $ENDPOINT"
+ENDPOINT="$API_SERVER/classify?analyse_id=$ANALYSE_ID"
 
 curl -X POST \
 -H "Authorization: Bearer $API_KEY" \
@@ -25,4 +27,3 @@ curl -X POST \
 -F "metadata=@$METADATA" \
 -H "accept: application/json" \
 "$ENDPOINT"
-

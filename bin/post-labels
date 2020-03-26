@@ -1,22 +1,23 @@
 #!/bin/bash
 
 # Usage
-# > bin/post-labels $server $analyse_id $labels_path
+# > bin/post-labels [labels_path] [analyse_id]
 
-# Example
-# > bin/post-labels https://vision.ukpik.ai/v1 1254448 bin/labels.json
+# Examples
+# > bin/post-labels
+# > bin/post-labels bin/labels.json
+# > bin/post-labels bin/labels.json 1254448
 
-SERVER=${1:-"https://vision.ukpik.ai/v1"}
+API_SERVER=${API_SERVER:="https://vision.ukpik.ai/v1"}
+LABELS=${1:-"bin/labels.json"}
 ANALYSE_ID=${2:-"1254448"}
-LABELS=${3:-"bin/labels.json"}
 
 if [[ -z "${API_KEY}" ]]; then
   echo "API_KEY is not set. Use export API_KEY=... or .envrc to provide it"
   exit 1
 fi
 
-ENDPOINT="$SERVER/label?analyse_id=$ANALYSE_ID"
-echo "POST $ENDPOINT"
+ENDPOINT="$API_SERVER/label?analyse_id=$ANALYSE_ID"
 
 curl -X POST \
 -H "Authorization: Bearer $API_KEY" \
