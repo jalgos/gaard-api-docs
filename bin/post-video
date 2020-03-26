@@ -20,8 +20,8 @@ ENDPOINT="$SERVER/classify?analyse_id=$ANALYSE_ID"
 echo "POST $ENDPOINT"
 
 curl -X POST \
--F "video=@$VIDEO" \
 -H "Authorization: Bearer $API_KEY" \
+-F "video=@$VIDEO" \
 -F "metadata=@$METADATA" \
 -H "accept: application/json" \
 "$ENDPOINT"
