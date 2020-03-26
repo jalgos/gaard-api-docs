@@ -42,7 +42,7 @@ Examples
 bin/post-video
 bin/post-video bin/video.mov
 bin/post-video bin/video.mov 1254448
-bin/post-video bin/video.mov 1254448 bin/metadata.jsonjson
+bin/post-video bin/video.mov 1254448 bin/metadata.json
 ```
 
 ### Get results
