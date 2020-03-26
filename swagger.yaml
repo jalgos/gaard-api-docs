@@ -5,13 +5,34 @@ info:
     url: 'https://jalgos.com/#contact'
     x-twitter: JalgosAI
   description: |
-    Description of Ukpik RESTful API.
+    # Introduction
 
-    Current limitations:
+    The Ukpik API server is [https://vision.ukpik.ai/v1](https://vision.ukpik.ai/v1).
+
+    The Ukpik API is built on HTTP. Our API is RESTful. It has predictable resource URLs. It returns HTTP response codes to indicate errors. It also accepts and returns JSON in the HTTP body. You can use your favorite HTTP/REST library for your programming language to use Ukpik's API.
+
+    Every action from our app is supported by an API which is documented and available for use so that you may automate any workflows necessary. This document contains the most commonly integrated resources.
+
+    # Authentication
+
+    To use an API you need the secret API key.
+    Contact Jalgos [contact@jalgos.com](contact@jalgos.com) to ask your API key.
+    You authenticate to the Ukpik API by providing your secret key in the request header.
+
+    Never share your secret keys. Keep them guarded and secure.
+
+    # Current limitations
       * Ukpik service does not support [cross origin headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
       for security reasons, therefore it is not possible to use Swagger UI and make API calls directly from browser.
 
-    Last update: 2020-03-25
+    # Getting Started Guide
+
+    Ukpik classifies videos asynchronously. The general flow is to send video to classification and receive the result by calling `/result` endpoint or using webhook.
+
+    The `error` field should be zero for successful and non zero for errors.
+
+
+    Last update: 2020-03-26
   termsOfService: 'https://jalgos.com/'
   title: Ukpik API
   version: 1.0.0
