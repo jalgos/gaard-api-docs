@@ -81,6 +81,8 @@ paths:
     post:
       tags:
         - Classification
+      parameters:
+        - $ref: "#/components/parameters/analyse_id"
       operationId: classify
       summary: Send video for classification
       description: Receives video, JSON metadata and send video to classification queue.
