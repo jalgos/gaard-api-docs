@@ -27,15 +27,15 @@ servers:
 
 tags:
   - description: Classification
-    name: classify
+    name: Classification
   - description: System
-    name: system
+    name: System
 
 paths:
   /version:
     get:
       tags:
-      - system
+      - System
       operationId: version
       summary: Current build version
       description: Returns current build version and node information for API service.
@@ -52,14 +52,52 @@ paths:
                   "node": "ukpik-node1",
                   "pod": "pub-677656cfc9-7tqc2",
                   "build_at": "Wed Mar 25 10:28:17 UTC 2020",
-                  "model": "prod.model.fit.fabien.20191018004336.rds",
+                  "model": "prod.model.20191018004336.rds",
+                  "namespace": "production"
+                }
+
+  /classify:
+    post:
+      tags:
+      - Classification
+      operationId: classify
+      summary: Send video for classification
+      description: Receives video, JSON metadata and send video to classification queue.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                metadata:
+                  $ref: '#/components/schemas/Metadata'
+                video:
+                  type: string
+                  format: binary
+            examples:
+              metadata.json:
+                externalValue: 'https://raw.githubusercontent.com/jalgos/ukpik-api-docs/master/bin/metadata.json'
+      responses:
+        '200':
+          description: A JSON object with information about received video status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Version'
+              example:
+                {
+                  "tag": "8218",
+                  "node": "ukpik-node1",
+                  "pod": "pub-677656cfc9-7tqc2",
+                  "build_at": "Wed Mar 25 10:28:17 UTC 2020",
+                  "model": "prod.model.20191018004336.rds",
                   "namespace": "production"
                 }
 
   /label:
     post:
       tags:
-      - classify
+      - Classification
       parameters:
         - $ref: "#/components/parameters/analyse_id"
       operationId: label
@@ -105,7 +143,7 @@ paths:
                     "node": "ukpik-fast-4",
                     "pod": "pub-677656cfc9-mdbk8",
                     "build_at": "Wed Mar 25 10:28:17 UTC 2020",
-                    "model": "prod.model.fit.fabien.20191018004336.rds",
+                    "model": "prod.model.20191018004336.rds",
                     "namespace": "production"
                   },
                   "accepted_at": "2020-03-25T15:49:20.014554806Z"
@@ -114,7 +152,7 @@ paths:
   /result:
     get:
       tags:
-      - classify
+      - Classification
       parameters:
         - $ref: "#/components/parameters/analyse_id"
       operationId: result
@@ -162,47 +200,9 @@ paths:
                     "node": "ukpik-fast-4",
                     "pod": "pub-677656cfc9-mdbk8",
                     "build_at": "Wed Mar 25 10:28:17 UTC 2020",
-                    "model": "prod.model.fit.fabien.20191018004336.rds",
+                    "model": "prod.model.20191018004336.rds",
                     "namespace": "kiwatch"
                   }
-                }
-
-  /classify:
-    post:
-      tags:
-      - classify
-      operationId: classify
-      summary: Send video for classification
-      description: Receives video, JSON metadata and send video to classification queue.
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                metadata:
-                  $ref: '#/components/schemas/Metadata'
-                video:
-                  type: string
-                  format: binary
-            examples:
-              metadata.json:
-                externalValue: 'https://raw.githubusercontent.com/jalgos/ukpik-api-docs/master/bin/metadata.json'
-      responses:
-        '200':
-          description: A JSON object with information about received video status
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Version'
-              example:
-                {
-                  "tag": "8218",
-                  "node": "ukpik-node1",
-                  "pod": "pub-677656cfc9-7tqc2",
-                  "build_at": "Wed Mar 25 10:28:17 UTC 2020",
-                  "model": "prod.model.fit.fabien.20191018004336.rds",
-                  "namespace": "production"
                 }
 
 components:
