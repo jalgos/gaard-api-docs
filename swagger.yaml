@@ -106,7 +106,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Version"
+                $ref: "#/components/schemas/ClassifyResponse"
               example:
                 {
                   "analyse_id": 2,
@@ -267,6 +267,18 @@ components:
           type: array
           items:
             type: string
+
+    ClassifyResponse:
+      type: object
+      properties:
+        analyse_id:
+          type: number
+          description: Numeric ID of the video analyse
+        accepted_at:
+          type: string
+          format: data-time
+        client_id:
+          type: number
 
     Result:
       type: object
