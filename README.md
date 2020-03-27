@@ -9,7 +9,7 @@ The API documentation is based on [OpenAPI 3.0.0](https://swagger.io/).
 
 To work with API you need `API_KEY`. Please contact us contact@jalgos.com to have access.
 
-The classification uses `analyse id` parameter that should be a unique number for each request. You can use a continuously growing counter.
+The classification uses `analyse_id` parameter that should be a unique number for each request. You can use a continuously growing counter.
 
 ## Use scripts
 

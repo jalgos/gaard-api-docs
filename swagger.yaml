@@ -83,7 +83,10 @@ paths:
         - Classification
       parameters:
         - $ref: "#/components/parameters/analyse_id"
+        - $ref: "#/components/parameters/webhook"
       operationId: classify
+      security:
+        - BearerAuth: []
       summary: Send video for classification
       description: Receives video, JSON metadata and send video to classification queue.
       requestBody:
@@ -121,10 +124,10 @@ paths:
       parameters:
         - $ref: "#/components/parameters/analyse_id"
       operationId: label
-      summary: Label classified video by operator
-      description: Set operators' labels to video
       security:
         - BearerAuth: []
+      summary: Label classified video by operator
+      description: Set operators' labels to video
       requestBody:
         content:
           multipart/form-data:
@@ -162,10 +165,10 @@ paths:
       parameters:
         - $ref: "#/components/parameters/analyse_id"
       operationId: result
-      summary: Returns classification result
-      description: Returns video classification result by analyse_id parameter
       security:
         - BearerAuth: []
+      summary: Returns classification result
+      description: Returns video classification result by analyse_id parameter
       responses:
         "200":
           description: A JSON object with classification result
@@ -221,6 +224,13 @@ components:
         type: integer
       required: true
       description: Numeric ID of the video analyse
+    webhook:
+      in: path
+      name: webhook
+      schema:
+        type: string
+      required: false
+      description: You can use a webhook parameter to specify where to send the async result of video classification once it's ready
   schemas:
     Version:
       type: object

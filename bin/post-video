@@ -1,25 +1,27 @@
 #!/bin/bash
 
 # Usage
-# > bin/post-video [video_path] [analyse_id] [metadata_path]
+# > bin/post-video [video_path] [analyse_id] [metadata_path] [webhook]
 
 # Examples
 # > bin/post-video
 # > bin/post-video bin/video.mov
 # > bin/post-video bin/video.mov 1254448
 # > bin/post-video bin/video.mov 1254448 bin/metadata.json
+# > bin/post-video bin/video.mov 1254448 bin/metadata.json https://webhook.site
 
 API_SERVER=${API_SERVER:="https://vision.ukpik.ai/v1"}
 VIDEO=${1:-"bin/video.mov"}
 ANALYSE_ID=$2
 METADATA=${3:-"bin/metadata.json"}
+WEBHOOK=$4
 
 if [[ -z "${API_KEY}" ]]; then
   echo "API_KEY is not set. Use export API_KEY=... or .envrc to provide it"
   exit 1
 fi
 
-ENDPOINT="$API_SERVER/classify?analyse_id=$ANALYSE_ID"
+ENDPOINT="$API_SERVER/classify?analyse_id=$ANALYSE_ID&webhook=$WEBHOOK"
 
 curl -X POST \
 -H "Authorization: Bearer $API_KEY" \
