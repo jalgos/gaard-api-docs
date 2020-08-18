@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   contact:
     name: Ukpik API
-    url: "https://jalgos.com/#contact"
+    url: "https://ukpik.ai/contact/"
     x-twitter: JalgosAI
   description: |
     # Introduction
@@ -33,7 +33,7 @@ info:
 
 
     Last update: 2020-03-26
-  termsOfService: "https://jalgos.com/"
+  termsOfService: "https://ukpik.ai/page/terms/"
   title: Ukpik API
   version: 1.0.0
   x-apisguru-categories:
