@@ -253,26 +253,6 @@ paths:
                         "flag": 0.14476033474895758,
                         "intrusion": 0.8923497761884469
                       },
-                      "timing": {
-                        "cluster": 28.232656,
-                        "get.background": 99.850692,
-                        "obj.TRF": 8.40315,
-                        "add.obj.classif": 0.17044,
-                        "nb.ukpik.threads": 1,
-                        "pack.results": 0.00063,
-                        "pack.shape.features": 0.241032,
-                        "tracking": 0.10225,
-                        "traj.agg": 1.252107,
-                        "video.TRF": 1.748488,
-                        "curv": 38.294515,
-                        "nb.trf.threads": 1,
-                        "total": 938.088197,
-                        "traj.TRF": 5.903299,
-                        "background.sub": 749.405166,
-                        "pack.traj.features": 0.874084,
-                        "sub.cluster": 3.574418,
-                        "glob.agg": 0.03353
-                      },
                       "video": {
                         "duration": 2.3,
                         "nframes": 6,
@@ -294,87 +274,8 @@ paths:
                     },
                     "created": "2023-04-21T12:23:14.066690918+02:00",
                     "started": "2023-04-21T12:23:14.066691058+02:00",
-                    "ukconf": {
-                      "exclude_zones": {
-                        "height": 480,
-                        "width": 640,
-                        "zones": [
-                          [
-                            {
-                              "px": 379,
-                              "py": 1
-                            },
-                            {
-                              "px": 450,
-                              "py": 42
-                            },
-                            {
-                              "px": 471,
-                              "py": 45
-                            },
-                            {
-                              "px": 582,
-                              "py": 107
-                            },
-                            {
-                              "px": 637,
-                              "py": 119
-                            },
-                            {
-                              "px": 642,
-                              "py": 1
-                            }
-                          ]
-                        ]
-                      }
-                    },
                     "risk": "danger",
-                    "withExclusionZone": true,
-                    "exclusionZones": [
-                      {
-                        "id": "61d34477ecd3943fa6366f1b",
-                        "siteId": "134188",
-                        "cameraId": "134188-VI08",
-                        "userId": "",
-                        "lastContributorId": "6135dcadf0453b523cf0865e",
-                        "width": 640,
-                        "height": 480,
-                        "area": [
-                          {
-                            "px": 379,
-                            "py": 1
-                          },
-                          {
-                            "px": 450,
-                            "py": 42
-                          },
-                          {
-                            "px": 471,
-                            "py": 45
-                          },
-                          {
-                            "px": 582,
-                            "py": 107
-                          },
-                          {
-                            "px": 637,
-                            "py": 119
-                          },
-                          {
-                            "px": 642,
-                            "py": 1
-                          }
-                        ],
-                        "startDate": "2021-12-31T23:00:00Z",
-                        "endDate": "2022-01-10T23:00:00Z",
-                        "useDays": true,
-                        "createdAt": "2022-01-03T18:46:15.927Z",
-                        "lastModifiedAt": "2022-06-03T13:17:41.081Z",
-                        "repeatAt": 62,
-                        "isActive": true,
-                        "isEnabled": true
-                      }
-                    ]
+                    "withExclusionZone": true
                   }
                 }
 
@@ -509,4 +410,3 @@ components:
         started:
           type: string
           format: date-time
-
