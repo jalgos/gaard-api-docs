@@ -152,7 +152,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Session"
-              example: { "success": true, "tenant": "scutum" }
+              example: { "success": true, "tenant": "meta" }
 
   /classify:
     post:
@@ -204,7 +204,7 @@ paths:
                     "parentId": "000000000000000000000000",
                     "cameraId": "134188-VI08",
                     "analyse_id": 1254448,
-                    "tenant": "scutum",
+                    "tenant": "meta",
                     "duration": 1085064,
                     "duration_seconds": 1,
                     "model": "noname",
