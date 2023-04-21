@@ -2,12 +2,12 @@ openapi: 3.0.0
 info:
   contact:
     name: Ukpik API
-    url: "https://ukpik.ai/contact/"
+    url: "https://jalgos.com/#contact"
     x-twitter: JalgosAI
   description: |
     # Introduction
 
-    The Ukpik API server is [https://vision.ukpik.ai/v1](https://vision.ukpik.ai/v1).
+    The Ukpik API server is [https://vision.ukpik.ai](https://vision.ukpik.ai).
 
     The Ukpik API is built on HTTP. Our API is RESTful. It has predictable resource URLs. It returns HTTP response codes to indicate errors. It also accepts and returns JSON in the HTTP body. You can use your favorite HTTP/REST library for your programming language to use Ukpik's API.
 
@@ -15,27 +15,13 @@ info:
 
     # Authentication
 
-    To use an API you need the secret API key.
-    Contact Jalgos [contact@jalgos.com](contact@jalgos.com) to ask your API key.
-    You authenticate to the Ukpik API by providing your secret key in the request header.
-
     Never share your secret keys. Keep them guarded and secure.
 
-    # Current limitations
-      * Ukpik service does not support [cross origin headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
-      for security reasons, therefore it is not possible to use Swagger UI and make API calls directly from browser.
+    Last update: 2023-01-12
 
-    # Getting Started Guide
-
-    Ukpik classifies videos asynchronously. The general flow is to send video to classification and receive the result by calling `/result` endpoint or using webhook.
-
-    The `error` field should be zero for successful results and non zero for errors.
-
-
-    Last update: 2020-03-26
-  termsOfService: "https://ukpik.ai/page/terms/"
+  termsOfService: "https://jalgos.com/"
   title: Ukpik API
-  version: 1.0.0
+  version: 2.0.19551
   x-apisguru-categories:
     - vision
   x-preferred: true
@@ -43,17 +29,20 @@ info:
     url: https://raw.githubusercontent.com/jalgos/ukpik-api-docs/master/images/logo.png
 
 servers:
-  - url: https://vision.ukpik.ai/v1
-    description: Ukpik Vision API v1 (production)
+  - url: https://vision.ukpik.ai
+    description: Ukpik API v2 (production)
 
 tags:
-  - description: Classification endpoints
+  - description: Classification of analysis results
     name: Classification
+  - description: Auth system endpoints
+    name: Auth
   - description: System related endpoints
     name: System
 
+
 paths:
-  /version:
+  /:
     get:
       tags:
         - System
@@ -76,161 +65,333 @@ paths:
                   "model": "prod.model.20191018004336.rds",
                   "namespace": "production",
                 }
+  /version:
+    get:
+      tags:
+        - System
+      operationId: versionId
+      summary: Current build version
+      description: Returns current build version and node information for API service.
+      responses:
+        "200":
+          description: A JSON object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Version"
+              example:
+                {
+                  "tag": "8218",
+                  "node": "ukpik-node1",
+                  "pod": "pub-677656cfc9-7tqc2",
+                  "build_at": "Wed Mar 25 10:28:17 UTC 2020",
+                  "model": "prod.model.20191018004336.rds",
+                  "namespace": "production",
+                }
+  /healthz:
+    get:
+      tags:
+        - System
+      operationId: healthz
+      summary: Health check
+      description: Check if the API is reachable by returning its state.
+      responses:
+        "200":
+          description: A JSON object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+              example: { "success": true }
+  /metrics:
+    get:
+      tags:
+        - System
+      operationId: metrics
+      summary: Prometheus metrics
+      description: Metrcis endpoint for Prometheus.
+      responses:
+        "200":
+          description: Prometheus metrics
+
+  /login:
+    get:
+      tags:
+        - Auth
+      operationId: login
+      summary: Authenticate user
+      responses:
+        "307":
+          description: Redirect to login callback URL specified in the API configuration
+
+  /logout:
+    get:
+      tags:
+        - Auth
+      operationId: logout
+      summary: Logout of current user session
+      responses:
+        "307":
+          description: If the user session is active, redirect to logout callback URL specified in the API configuration
+        "500":
+          description: If there is no active session, an error is returned
+
+
+  /session:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - Auth
+      operationId: session
+      summary: User session information
+      responses:
+        "200":
+          description: A JSON object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+              example: { "success": true, "tenant": "scutum" }
 
   /classify:
     post:
+      security:
+        - cookieAuth: []
       tags:
         - Classification
-      parameters:
-        - $ref: "#/components/parameters/analyse_id"
-        - $ref: "#/components/parameters/webhook"
-      operationId: classify
-      security:
-        - BearerAuth: []
-      summary: Send video for classification
-      description: Receives video, JSON metadata and send video to classification queue.
+      summary: Classify a video
+      description: Upload a video and its metadata for classification
+      operationId: classifyVideo
       requestBody:
         content:
           multipart/form-data:
             schema:
               type: object
               properties:
-                metadata:
-                  $ref: "#/components/schemas/Metadata"
                 video:
                   type: string
                   format: binary
-            examples:
-              metadata.json:
-                externalValue: "https://raw.githubusercontent.com/jalgos/ukpik-api-docs/master/bin/metadata.json"
+                  description: Video file to be classified
+                metadata:
+                  type: string
+                  format: binary
+                  description: Metadata file in JSON format
+                  example: >
+                    {
+                      "analyse_id": 1254448,
+                      "client_id": 134188,
+                      "no_trans": "20818",
+                      "parc_origine": "RO",
+                      "date_recep": "16-jan-2019 10:09:57",
+                      "code_msg": "VI08",
+                      "date_start_analyse": "2019-01-16 10:09:57.216"
+                    }
+        required: true
       responses:
-        "200":
-          description: A JSON object with information about received video status
+        '200':
+          description: A JSON object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ClassifyResponse"
-              example:
+                $ref: "#/components/schemas/ClassifyResult"
+              example: >
                 {
-                  "analyse_id": 2,
-                  "accepted_at": "2020-03-26T18:37:52.07132+01:00",
-                  "client_id": 134188,
+                  "id": "6442641243e98f53a75dd18a",
+                  "accepted_at": "2023-04-21T12:23:14.066697348+02:00",
+                  "task": {
+                    "id": "6442641243e98f53a75dd18a",
+                    "parentId": "000000000000000000000000",
+                    "cameraId": "134188-VI08",
+                    "analyse_id": 1254448,
+                    "tenant": "scutum",
+                    "duration": 1085064,
+                    "duration_seconds": 1,
+                    "model": "noname",
+                    "version": "2.0.16123",
+                    "error_code": 0,
+                    "metadata": {
+                      "analyse_id": 1254448,
+                      "client_id": 134188,
+                      "code_msg": "VI08",
+                      "date_recep": "16-jan-2019 10:09:57     ",
+                      "date_start_analyse": "2019-01-16 10:09:57.216",
+                      "no_trans": "20818",
+                      "parc_origine": "RO"
+                    },
+                    "ukpik_result": {
+                      "yolo": {
+                        "person": 0,
+                        "vehicule": 0
+                      },
+                      "raw_scores": {
+                        "NOTHING": 0.0009209133446293678,
+                        "animal": 0.047020897252785576,
+                        "flag": 0.14476033474895758,
+                        "intrusion": 0.8923497761884469,
+                        "plant": 0.0534737527514453,
+                        "rain": 0.004382775188993098,
+                        "spider": 0.00936596151481541,
+                        "text": 0.012392940304383772,
+                        "web": 0.004786852323527879,
+                        "wind": 0.030874568392755878,
+                        "person": 0.7356461054696766,
+                        "vehicule": 0.4086555850084504
+                      },
+                      "result": "classified",
+                      "scores": {
+                        "wind": 0.030874568392755878,
+                        "animal": 0.047020897252785576,
+                        "text": 0.012392940304383772,
+                        "web": 0.004786852323527879,
+                        "person": 0.7356461054696766,
+                        "plant": 0.0534737527514453,
+                        "rain": 0.004382775188993098,
+                        "spider": 0.00936596151481541,
+                        "vehicule": 0.4086555850084504,
+                        "NOTHING": 0.0009209133446293678,
+                        "flag": 0.14476033474895758,
+                        "intrusion": 0.8923497761884469
+                      },
+                      "timing": {
+                        "cluster": 28.232656,
+                        "get.background": 99.850692,
+                        "obj.TRF": 8.40315,
+                        "add.obj.classif": 0.17044,
+                        "nb.ukpik.threads": 1,
+                        "pack.results": 0.00063,
+                        "pack.shape.features": 0.241032,
+                        "tracking": 0.10225,
+                        "traj.agg": 1.252107,
+                        "video.TRF": 1.748488,
+                        "curv": 38.294515,
+                        "nb.trf.threads": 1,
+                        "total": 938.088197,
+                        "traj.TRF": 5.903299,
+                        "background.sub": 749.405166,
+                        "pack.traj.features": 0.874084,
+                        "sub.cluster": 3.574418,
+                        "glob.agg": 0.03353
+                      },
+                      "video": {
+                        "duration": 2.3,
+                        "nframes": 6,
+                        "original.fps": 3,
+                        "original.nframes": 6,
+                        "fps": 2.608695652173913,
+                        "height": 320,
+                        "original.height": 480,
+                        "original.width": 640,
+                        "width": 426
+                      }
+                    },
+                    "labels": [
+                      "DANGER"
+                    ],
+                    "video_details": {
+                      "videoname": "video.1254448.mp4",
+                      "filesize": 246792
+                    },
+                    "created": "2023-04-21T12:23:14.066690918+02:00",
+                    "started": "2023-04-21T12:23:14.066691058+02:00",
+                    "ukconf": {
+                      "exclude_zones": {
+                        "height": 480,
+                        "width": 640,
+                        "zones": [
+                          [
+                            {
+                              "px": 379,
+                              "py": 1
+                            },
+                            {
+                              "px": 450,
+                              "py": 42
+                            },
+                            {
+                              "px": 471,
+                              "py": 45
+                            },
+                            {
+                              "px": 582,
+                              "py": 107
+                            },
+                            {
+                              "px": 637,
+                              "py": 119
+                            },
+                            {
+                              "px": 642,
+                              "py": 1
+                            }
+                          ]
+                        ]
+                      }
+                    },
+                    "risk": "danger",
+                    "withExclusionZone": true,
+                    "exclusionZones": [
+                      {
+                        "id": "61d34477ecd3943fa6366f1b",
+                        "siteId": "134188",
+                        "cameraId": "134188-VI08",
+                        "userId": "",
+                        "lastContributorId": "6135dcadf0453b523cf0865e",
+                        "width": 640,
+                        "height": 480,
+                        "area": [
+                          {
+                            "px": 379,
+                            "py": 1
+                          },
+                          {
+                            "px": 450,
+                            "py": 42
+                          },
+                          {
+                            "px": 471,
+                            "py": 45
+                          },
+                          {
+                            "px": 582,
+                            "py": 107
+                          },
+                          {
+                            "px": 637,
+                            "py": 119
+                          },
+                          {
+                            "px": 642,
+                            "py": 1
+                          }
+                        ],
+                        "startDate": "2021-12-31T23:00:00Z",
+                        "endDate": "2022-01-10T23:00:00Z",
+                        "useDays": true,
+                        "createdAt": "2022-01-03T18:46:15.927Z",
+                        "lastModifiedAt": "2022-06-03T13:17:41.081Z",
+                        "repeatAt": 62,
+                        "isActive": true,
+                        "isEnabled": true
+                      }
+                    ]
+                  }
                 }
 
-  /label:
-    post:
-      tags:
-        - Classification
-      parameters:
-        - $ref: "#/components/parameters/analyse_id"
-      operationId: label
-      security:
-        - BearerAuth: []
-      summary: Label classified video by operator
-      description: Set operators' labels to video
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                labels:
-                  $ref: "#/components/schemas/LabelsRequest"
-            examples:
-              labels.json:
-                externalValue: "https://raw.githubusercontent.com/jalgos/ukpik-api-docs/master/bin/labels.json"
-      responses:
-        "200":
-          description: A JSON object with information about updated labels
+        "500":
+          description: Server side error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LabelsResponse"
-              example:
-                {
-                  "analyse_id": 1254448,
-                  "labels":
-                    {
-                      "op_qualification_1": "VN0000",
-                      "op_qualification_2": "VN1001",
-                    },
-                  "labels_op": ["VN0000", "VN1001"],
-                  "accepted_at": "2020-03-25T15:49:20.014554806Z",
-                }
+                $ref: "#/components/schemas/GenericError"
 
-  /result:
-    get:
-      tags:
-        - Classification
-      parameters:
-        - $ref: "#/components/parameters/analyse_id"
-      operationId: result
-      security:
-        - BearerAuth: []
-      summary: Returns classification result
-      description: Returns video classification result by analyse_id parameter
-      responses:
-        "200":
-          description: A JSON object with classification result
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Result"
-              example:
-                {
-                  "human_labels":
-                    {
-                      "op_qualification_1": "VN0000",
-                      "op_qualification_2": "VN1001",
-                    },
-                  "score_details":
-                    {
-                      "p_NOTHING": 0.2359,
-                      "p_animal": 0.0888,
-                      "p_flag": 0.0485,
-                      "p_intrusion": 0.5037,
-                      "p_person": 0.7994,
-                      "p_plant": 0.0256,
-                      "p_rain": 0.0262,
-                      "p_spider": 0.0485,
-                      "p_text": 0.64,
-                      "p_vehicule": 0.188,
-                      "p_web": 0.0212,
-                      "p_wind": 0.0182,
-                    },
-                  "jalgos_received": 1585146836.5311,
-                  "analyse_id": 1254448,
-                  "error_code": 0,
-                  "error_msg": "",
-                  "status_classification": "success",
-                  "done_classif_ts": 1585146890.5978,
-                  "jalgos_classified": "2020-03-25T14:34:50.597800016Z",
-                  "label": "Not classified"
-                }
 
 components:
   securitySchemes:
-    BasicAuth:
-      type: http
-      scheme: basic
-    BearerAuth:
-      type: http
-      scheme: bearer
-  parameters:
-    analyse_id:
-      in: path
-      name: analyse_id
-      schema:
-        type: integer
-      required: true
-      description: Numeric ID of the video analyse
-    webhook:
-      in: path
-      name: webhook
-      schema:
-        type: string
-      required: false
-      description: You can use a webhook parameter to specify where to send the async result of video classification once it's ready
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: active-session
   schemas:
     Version:
       type: object
@@ -253,90 +414,99 @@ components:
         namespace:
           type: string
           description: Kubernetes namespace
-
-    LabelsRequest:
-      type: object
-      required:
-        - op_qualification_1
-      properties:
-        op_qualification_1:
-          type: string
-        op_qualification_2:
-          type: string
-        op_qualification_3:
-          type: string
-        op_qualification_4:
-          type: string
-
-    LabelsResponse:
+    Health:
       type: object
       properties:
+        success:
+          type: boolean
+          description: State of the API
+    GenericError:
+      type: object
+      example: { "success": false, "error": "" }
+      properties:
+        success:
+          type: boolean
+          description: State of operation
+        error:
+          type: string
+          description: Error message
+    Session:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: State of active session
+        tenant:
+          type: string
+          description: User tenant role
+
+    ClassifyResult:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the classification result
+        accepted_at:
+          type: string
+          format: date-time
+          description: Timestamp when the classification was accepted
+        task:
+          $ref: "#/components/schemas/Task"
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the task
+        parentId:
+          type: string
+          description: Identifier of the parent task, if any
+        cameraId:
+          type: string
+          description: Identifier of the camera used for the video
         analyse_id:
-          type: number
-        labels_op:
+          type: integer
+          description: Identifier of the analysis
+        tenant:
+          type: string
+          description: Tenant name
+        duration:
+          type: integer
+          description: Duration of the video in microseconds
+        duration_seconds:
+          type: integer
+          description: Duration of the video in seconds
+        model:
+          type: string
+          description: Model used for classification
+        version:
+          type: string
+          description: Version of the model used for classification
+        error_code:
+          type: integer
+          description: Error code, if any, during the classification process
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Metadata related to the video
+        ukpik_result:
+          type: object
+          additionalProperties: true
+          description: Results from the classification process
+        labels:
           type: array
           items:
             type: string
-
-    ClassifyResponse:
-      type: object
-      properties:
-        analyse_id:
-          type: number
-          description: Numeric ID of the video analyse
-        accepted_at:
-          type: string
-          format: data-time
-        client_id:
-          type: number
-
-    Result:
-      type: object
-      properties:
-        human_labels:
-          $ref: "#/components/schemas/LabelsRequest"
-        score_details:
+          description: Array of labels generated from the classification
+        video_details:
           type: object
-          description: Classification details in terms of probability from 0 to 1
-        analyse_id:
-          type: number
-          description: Numeric ID of the video analyse
-        jalgos_received:
-          type: number
-          description: Unix timestamp when video recieved by Ukpik API
-        error_code:
-          type: number
-          description: Zero means successful result
-        error_msg:
+          additionalProperties: true
+          description: Details about the video file
+        created:
           type: string
-          description: If error code is not zero contains error description
-        status_classification:
+          format: date-time
+          description: Timestamp when the task was created
+        started:
           type: string
-        done_classif_ts:
-          type: number
-          description: Unix timestamp when Ukpik finished classification process
-        jalgos_classified:
-          type: string
-          format: data-time
-        label:
-          type: string
-          description: Classification result label
+          format: date-time
 
-    Metadata:
-      type: object
-      description: Metadata is an optional JSON that could be attached to request
-      properties:
-        client_id:
-          type: number
-        no_trans:
-          type: string
-        parc_origine:
-          type: string
-        date_recep:
-          type: string
-          format: "16-jan-2020 10:09:57"
-        code_msg:
-          type: string
-        date_start_analyse:
-          type: string
-          format: data-time
