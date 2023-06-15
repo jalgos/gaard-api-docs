@@ -17,8 +17,6 @@ info:
     This means every action possible within our app can be automated via the API, making your workflow integration seamless.
     This document will guide you through the most frequently used resources.
 
-    ## Authentication
-
     To ensure secure access, Ukpik utilizes API keys.
     Please reach out to us at [https://ukpik.ai/contact-1](https://ukpik.ai/contact-1) to obtain your unique API key.
     Remember, your API keys are confidential. Please do not share them and keep them secure.
