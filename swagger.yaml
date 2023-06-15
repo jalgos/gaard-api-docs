@@ -2,26 +2,32 @@ openapi: 3.0.0
 info:
   contact:
     name: Ukpik API
-    url: "https://jalgos.com/#contact"
+    url: "https://ukpik.ai/"
     x-twitter: JalgosAI
   description: |
     # Introduction
 
-    The Ukpik API server is [https://vision.ukpik.ai](https://vision.ukpik.ai).
+    Welcome to the Ukpik API, a state-of-the-art interface designed to provide access to our advanced computer vision solutions for telesurveillance. Access the server at [https://vision.ukpik.ai](https://vision.ukpik.ai).
 
-    The Ukpik API is built on HTTP. Our API is RESTful. It has predictable resource URLs. It returns HTTP response codes to indicate errors. It also accepts and returns JSON in the HTTP body. You can use your favorite HTTP/REST library for your programming language to use Ukpik's API.
+    Ukpik API is built upon RESTful principles, providing intuitive and predictable resource URLs.
+    It employs HTTP response codes for indicating errors and supports JSON in HTTP body for requests and responses.
+    Regardless of your preferred programming language, you can effortlessly interface with our API using any HTTP/REST library.
 
-    Every action from our app is supported by an API which is documented and available for use so that you may automate any workflows necessary. This document contains the most commonly integrated resources.
+    Our API fully supports all the functionalities provided by the Ukpik application.
+    This means every action possible within our app can be automated via the API, making your workflow integration seamless.
+    This document will guide you through the most frequently used resources.
 
-    # Authentication
+    ## Authentication
 
-    Never share your secret keys. Keep them guarded and secure.
+    To ensure secure access, Ukpik utilizes API keys.
+    Please reach out to us at [https://ukpik.ai/contact-1](https://ukpik.ai/contact-1) to obtain your unique API key.
+    Remember, your API keys are confidential. Please do not share them and keep them secure.
 
-    Last update: 2023-01-12
+    Last update: 2023-06-15
 
-  termsOfService: "https://jalgos.com/"
+  termsOfService: "https://ukpik.ai/licensing"
   title: Ukpik API
-  version: 2.0.19551
+  version: 2.0.19627
   x-apisguru-categories:
     - vision
   x-preferred: true
@@ -39,7 +45,6 @@ tags:
     name: Auth
   - description: System related endpoints
     name: System
-
 
 paths:
   /:
@@ -140,7 +145,7 @@ paths:
   /session:
     get:
       security:
-        - cookieAuth: []
+        - bearerAuth: []
       tags:
         - Auth
       operationId: session
@@ -157,7 +162,7 @@ paths:
   /classify:
     post:
       security:
-        - cookieAuth: []
+        - bearerAuth: []
       tags:
         - Classification
       summary: Classify a video
@@ -286,13 +291,34 @@ paths:
               schema:
                 $ref: "#/components/schemas/GenericError"
 
+  /result:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Classification
+      operationId: getResult
+      summary: Get classification result by analyse_id
+      parameters:
+        - name: analyse_id
+          in: query
+          description: analyse_id for which to retrieve the classification result
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: A JSON object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClassifyResult"
 
 components:
   securitySchemes:
-    cookieAuth:
-      type: apiKey
-      in: cookie
-      name: active-session
+    bearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     Version:
       type: object
