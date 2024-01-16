@@ -21,7 +21,7 @@ if [[ -z "${API_KEY}" ]]; then
   exit 1
 fi
 
-ENDPOINT="$API_SERVER/classify?analyse_id=$ANALYSE_ID&webhook=$WEBHOOK"
+ENDPOINT="$API_SERVER/classify?sync=true&analyse_id=$ANALYSE_ID&webhook=$WEBHOOK"
 
 curl -X POST \
 -H "Authorization: Bearer $API_KEY" \
