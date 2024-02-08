@@ -18,8 +18,8 @@ Classification API is asynchronous. The general flow is to send video to classif
 Clone repository
 
 ```bash
-git clone git@github.com:jalgos/ukpik-api-docs.git
-cd ukpik-api-docs
+git clone git@github.com:jalgos/gaard-api-docs.git
+cd gaard-api-docs
 ```
 
 Add `API_KEY` to environment variables
