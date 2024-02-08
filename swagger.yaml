@@ -30,7 +30,7 @@ info:
     - vision
   x-preferred: true
   x-logo:
-    url: https://raw.githubusercontent.com/jalgos/ukpik-api-docs/master/images/logo.png
+    url: https://raw.githubusercontent.com/jalgos/gaard-api-docs/master/images/logo.png
 
 servers:
   - url: https://vision.gaard.ai
@@ -62,7 +62,7 @@ paths:
               example:
                 {
                   "tag": "8218",
-                  "node": "ukpik-node1",
+                  "node": "gaard-node1",
                   "pod": "pub-677656cfc9-7tqc2",
                   "build_at": "Wed Mar 25 10:28:17 UTC 2020",
                   "model": "prod.model.20191018004336.rds",
@@ -85,7 +85,7 @@ paths:
               example:
                 {
                   "tag": "8218",
-                  "node": "ukpik-node1",
+                  "node": "gaard-node1",
                   "pod": "pub-677656cfc9-7tqc2",
                   "build_at": "Wed Mar 25 10:28:17 UTC 2020",
                   "model": "prod.model.20191018004336.rds",
@@ -222,7 +222,7 @@ paths:
                       "no_trans": "20818",
                       "parc_origine": "RO"
                     },
-                    "ukpik_result": {
+                    "gaard_result": {
                       "yolo": {
                         "person": 0,
                         "vehicule": 0
@@ -414,7 +414,7 @@ components:
           type: object
           additionalProperties: true
           description: Metadata related to the video
-        ukpik_result:
+        gaard_result:
           type: object
           additionalProperties: true
           description: Results from the classification process

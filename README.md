@@ -1,9 +1,9 @@
-# Ukpik API documentation
+# Gaard API documentation
 
 The API documentation is based on [OpenAPI 3.0.0](https://swagger.io/).
 
-- API server: [https://vision.ukpik.ai/v1](https://vision.ukpik.ai/v1)
-- API documentation website [https://docs.ukpik.ai](https://docs.ukpik.ai)
+- API server: [https://vision.gaard.ai/v1](https://vision.gaard.ai/v1)
+- API documentation website [https://docs.gaard.ai](https://docs.gaard.ai)
 
 ## Work with API
 

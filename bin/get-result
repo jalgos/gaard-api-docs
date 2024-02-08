@@ -6,7 +6,7 @@
 # Example
 # > bin/get-result 1254448
 
-API_SERVER=${API_SERVER:="https://vision.ukpik.ai/v1"}
+API_SERVER=${API_SERVER:="https://vision.gaard.ai/v1"}
 ANALYSE_ID=${1:-"1254448"}
 
 if [[ -z "${API_KEY}" ]]; then

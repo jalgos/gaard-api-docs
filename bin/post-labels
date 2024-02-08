@@ -8,7 +8,7 @@
 # > bin/post-labels bin/labels.json
 # > bin/post-labels bin/labels.json 1254448
 
-API_SERVER=${API_SERVER:="https://vision.ukpik.ai/v1"}
+API_SERVER=${API_SERVER:="https://vision.gaard.ai/v1"}
 LABELS=${1:-"bin/labels.json"}
 ANALYSE_ID=${2:-"1254448"}
 
