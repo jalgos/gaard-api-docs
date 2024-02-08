@@ -2,12 +2,12 @@ openapi: 3.0.0
 info:
   contact:
     name: Ukpik API
-    url: "https://ukpik.ai/"
+    url: "https://gaard.ai/"
     x-twitter: JalgosAI
   description: |
     # Introduction
 
-    Welcome to the Ukpik API, a state-of-the-art interface designed to provide access to our advanced computer vision solutions for telesurveillance. Access the server at [https://vision.ukpik.ai](https://vision.ukpik.ai).
+    Welcome to the Ukpik API, a state-of-the-art interface designed to provide access to our advanced computer vision solutions for telesurveillance. Access the server at [https://vision.gaard.ai](https://vision.gaard.ai).
 
     Ukpik API is built upon RESTful principles, providing intuitive and predictable resource URLs.
     It employs HTTP response codes for indicating errors and supports JSON in HTTP body for requests and responses.
@@ -18,13 +18,13 @@ info:
     This document will guide you through the most frequently used resources.
 
     To ensure secure access, Ukpik utilizes API keys.
-    Please reach out to us at [https://ukpik.ai/contact-1](https://ukpik.ai/contact-1) to obtain your unique API key.
+    Please reach out to us at [https://gaard.ai/contact-1](https://gaard.ai/contact-1) to obtain your unique API key.
     Remember, your API keys are confidential. Please do not share them and keep them secure.
 
     Last update: 2023-06-15
 
-  termsOfService: "https://ukpik.ai/licensing"
-  title: Ukpik API
+  termsOfService: "https://gaard.ai/licensing"
+  title: Gaard API
   version: 2.0.19627
   x-apisguru-categories:
     - vision
@@ -33,7 +33,7 @@ info:
     url: https://raw.githubusercontent.com/jalgos/ukpik-api-docs/master/images/logo.png
 
 servers:
-  - url: https://vision.ukpik.ai
+  - url: https://vision.gaard.ai
     description: Ukpik API v2 (production)
 
 tags:
