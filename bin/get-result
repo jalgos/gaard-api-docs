@@ -1,20 +1,25 @@
 #!/bin/bash
 
 # Usage
-# > bin/get-result analyse_id
+# > bin/get-result classify_id
 
 # Example
 # > bin/get-result 1254448
 
 API_SERVER=${API_SERVER:="https://vision.gaard.ai/v1"}
-ANALYSE_ID=${1:-"1254448"}
+CLASSIFY_ID=$1
 
 if [[ -z "${API_KEY}" ]]; then
   echo "API_KEY is not set. Use export API_KEY=... or .envrc to provide it"
   exit 1
 fi
 
-ENDPOINT="$API_SERVER/result?analyse_id=$ANALYSE_ID"
+if [[ -z "${CLASSIFY_ID}" ]]; then
+  echo "CLASSIFY_ID is not set. Please provide it as an argument"
+  exit 1
+fi
+
+ENDPOINT="$API_SERVER/result/$CLASSIFY_ID"
 
 curl -X GET \
 -H "Authorization: Bearer $API_KEY" \
