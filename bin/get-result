@@ -4,7 +4,10 @@
 # > bin/get-result classify_id
 
 # Example
-# > bin/get-result 1254448
+# > bin/get-result 66448cfd56039e2eb7701009
+
+# To obtain the coassify_id, you can run the classification command using the script 'bin/post-video'.
+# The coassify_id can be found in the 'id' field of the response JSON.
 
 API_SERVER=${API_SERVER:="https://vision.gaard.ai/v1"}
 CLASSIFY_ID=$1
