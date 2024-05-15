@@ -9,23 +9,17 @@ info:
 
     Welcome to the Gaard API, a state-of-the-art interface designed to provide access to our advanced computer vision solutions for telesurveillance. Access the server at [https://vision.gaard.ai](https://vision.gaard.ai).
 
-    Gaard API is built upon RESTful principles, providing intuitive and predictable resource URLs.
-    It employs HTTP response codes for indicating errors and supports JSON in HTTP body for requests and responses.
-    Regardless of your preferred programming language, you can effortlessly interface with our API using any HTTP/REST library.
+    Gaard API is built upon RESTful principles, providing intuitive and predictable resource URLs. It employs HTTP response codes for indicating errors and supports JSON in HTTP body for requests and responses. Regardless of your preferred programming language, you can effortlessly interface with our API using any HTTP/REST library.
 
-    Our API fully supports all the functionalities provided by the Gaard application.
-    This means every action possible within our app can be automated via the API, making your workflow integration seamless.
-    This document will guide you through the most frequently used resources.
+    Our API fully supports all the functionalities provided by the Gaard application. This means every action possible within our app can be automated via the API, making your workflow integration seamless. This document will guide you through the most frequently used resources.
 
-    To ensure secure access, Gaard utilizes API keys.
-    Please reach out to us at [https://gaard.ai/contact-1](https://gaard.ai/contact-1) to obtain your unique API key.
-    Remember, your API keys are confidential. Please do not share them and keep them secure.
+    To ensure secure access, Gaard utilizes API keys. Remember, your API keys are confidential. Please do not share them and keep them secure.
 
-    Last update: 2023-06-15
+    Last update: 2024-05-15
 
-  termsOfService: "https://gaard.ai/licensing"
+  termsOfService: "https://gaard.ai/cgv"
   title: Gaard API
-  version: 2.0.19862
+  version: 2.0.20186
   x-apisguru-categories:
     - vision
   x-preferred: true
@@ -91,71 +85,6 @@ paths:
                   "model": "prod.model.20191018004336.rds",
                   "namespace": "production",
                 }
-  /healthz:
-    get:
-      tags:
-        - System
-      operationId: healthz
-      summary: Health check
-      description: Check if the API is reachable by returning its state.
-      responses:
-        "200":
-          description: A JSON object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Health"
-              example: { "success": true }
-  /metrics:
-    get:
-      tags:
-        - System
-      operationId: metrics
-      summary: Prometheus metrics
-      description: Metrcis endpoint for Prometheus.
-      responses:
-        "200":
-          description: Prometheus metrics
-
-  /login:
-    get:
-      tags:
-        - Auth
-      operationId: login
-      summary: Authenticate user
-      responses:
-        "307":
-          description: Redirect to login callback URL specified in the API configuration
-
-  /logout:
-    get:
-      tags:
-        - Auth
-      operationId: logout
-      summary: Logout of current user session
-      responses:
-        "307":
-          description: If the user session is active, redirect to logout callback URL specified in the API configuration
-        "500":
-          description: If there is no active session, an error is returned
-
-
-  /session:
-    get:
-      security:
-        - bearerAuth: []
-      tags:
-        - Auth
-      operationId: session
-      summary: User session information
-      responses:
-        "200":
-          description: A JSON object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Session"
-              example: { "success": true, "tenant": "meta" }
 
   /classify:
     post:
@@ -182,13 +111,8 @@ paths:
                   description: Metadata file in JSON format
                   example: >
                     {
-                      "analyse_id": 1254448,
                       "client_id": 134188,
-                      "no_trans": "20818",
-                      "parc_origine": "RO",
-                      "date_recep": "16-jan-2019 10:09:57",
-                      "code_msg": "VI08",
-                      "date_start_analyse": "2019-01-16 10:09:57.216"
+                      "camera_id": "VI01",
                     }
         required: true
       responses:
@@ -200,86 +124,77 @@ paths:
                 $ref: "#/components/schemas/ClassifyResult"
               example: >
                 {
-                  "id": "6442641243e98f53a75dd18a",
-                  "accepted_at": "2023-04-21T12:23:14.066697348+02:00",
-                  "task": {
-                    "id": "6442641243e98f53a75dd18a",
-                    "parentId": "000000000000000000000000",
-                    "cameraId": "134188-VI08",
-                    "analyse_id": 1254448,
-                    "tenant": "meta",
-                    "duration": 1085064,
-                    "duration_seconds": 1,
-                    "model": "noname",
-                    "version": "2.0.16123",
-                    "error_code": 0,
-                    "metadata": {
-                      "analyse_id": 1254448,
-                      "client_id": 134188,
-                      "code_msg": "VI08",
-                      "date_recep": "16-jan-2019 10:09:57     ",
-                      "date_start_analyse": "2019-01-16 10:09:57.216",
-                      "no_trans": "20818",
-                      "parc_origine": "RO"
-                    },
-                    "gaard_result": {
-                      "yolo": {
-                        "person": 0,
-                        "vehicule": 0
-                      },
-                      "raw_scores": {
-                        "NOTHING": 0.0009209133446293678,
-                        "animal": 0.047020897252785576,
-                        "flag": 0.14476033474895758,
-                        "intrusion": 0.8923497761884469,
-                        "plant": 0.0534737527514453,
-                        "rain": 0.004382775188993098,
-                        "spider": 0.00936596151481541,
-                        "text": 0.012392940304383772,
-                        "web": 0.004786852323527879,
-                        "wind": 0.030874568392755878,
-                        "person": 0.7356461054696766,
-                        "vehicule": 0.4086555850084504
-                      },
-                      "result": "classified",
-                      "scores": {
-                        "wind": 0.030874568392755878,
-                        "animal": 0.047020897252785576,
-                        "text": 0.012392940304383772,
-                        "web": 0.004786852323527879,
-                        "person": 0.7356461054696766,
-                        "plant": 0.0534737527514453,
-                        "rain": 0.004382775188993098,
-                        "spider": 0.00936596151481541,
-                        "vehicule": 0.4086555850084504,
-                        "NOTHING": 0.0009209133446293678,
-                        "flag": 0.14476033474895758,
-                        "intrusion": 0.8923497761884469
-                      },
-                      "video": {
-                        "duration": 2.3,
-                        "nframes": 6,
-                        "original.fps": 3,
-                        "original.nframes": 6,
-                        "fps": 2.608695652173913,
-                        "height": 320,
-                        "original.height": 480,
-                        "original.width": 640,
-                        "width": 426
-                      }
-                    },
-                    "labels": [
-                      "DANGER"
-                    ],
-                    "video_details": {
-                      "videoname": "video.1254448.mp4",
-                      "filesize": 246792
-                    },
-                    "created": "2023-04-21T12:23:14.066690918+02:00",
-                    "started": "2023-04-21T12:23:14.066691058+02:00",
-                    "risk": "danger",
-                    "withExclusionZone": true
-                  }
+                  "id": "66448cfd56039e2eb7701009",
+                  "parentId": "000000000000000000000000",
+                  "cameraId": "134188-VI01",
+                  "analyse_id": 1134915906,
+                  "tenant": "demo",
+                  "duration": 3042056,
+                  "duration_seconds": 3,
+                  "model": "noname",
+                  "version": "2.0.16123",
+                  "error_code": 0,
+                  "risk": "intrusion",
+                  "labels": [
+                    "intrusion",
+                    "person"
+                  ],
+                  "scores": {
+                    "spider": 0.006814155539197582,
+                    "animal": 0.03490323977691366,
+                    "plant": 0.029940119760479042,
+                    "vehicule": 0.10077824836276382,
+                    "text": 0.0006343906582260771,
+                    "web": 0.008982035928143716,
+                    "rain": 0.0018018018018018014,
+                    "wind": 0.02095808383233533,
+                    "NOTHING": 0.0004909645916406409,
+                    "flag": 0.04917147676228464,
+                    "intrusion": 0.9730538922155688,
+                    "other": 0.028108597054560112,
+                    "person": 0.9730538922155688
+                  },
+                  "video": {
+                    "videoname": "video.mov",
+                    "filesize": 786800,
+                    "specs": {
+                      "duration": 4.217772,
+                      "fps": 3.082196003008223,
+                      "original.nframes": 12,
+                      "original.width": 640,
+                      "height": 320,
+                      "nframes": 13,
+                      "original.fps": 3,
+                      "original.height": 360,
+                      "width": 568
+                    }
+                  },
+                  "timing": {
+                    "traj.TRF": 4.809535,
+                    "nb.trf.threads": 1,
+                    "pack.results": 0.00066,
+                    "nb.ukpik.threads": 1,
+                    "obj.TRF": 16.492315,
+                    "cluster": 106.054095,
+                    "get.background": 202.652742,
+                    "total": 2663.311597,
+                    "tracking": 0.129971,
+                    "traj.agg": 1.409457,
+                    "pack.shape.features": 0.082241,
+                    "sub.cluster": 10.086482,
+                    "curv": 117.828385,
+                    "glob.agg": 0.02619,
+                    "pack.traj.features": 0.923235,
+                    "video.TRF": 1.93995,
+                    "add.obj.classif": 0.190931,
+                    "background.sub": 2200.683568
+                  },
+                  "metadata": {
+                    "camera_id": "VI01",
+                    "client_id": "134188"
+                  },
+                  "created_at": "2024-05-15T12:22:54.032628557+02:00",
+                  "started_at": "2024-05-15T12:22:54.032628727+02:00"
                 }
 
         "500":
@@ -289,21 +204,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/GenericError"
 
-  /result:
+  /result/{classify_id}:
     get:
       security:
         - bearerAuth: []
       tags:
         - Classification
-      operationId: getResult
-      summary: Get classification result by analyse_id
       parameters:
-        - name: analyse_id
-          in: query
-          description: analyse_id for which to retrieve the classification result
-          required: true
+        - in: path
+          name: classify_id
           schema:
-            type: integer
+            type: string
+          required: true
+          description: Numeric ID of the classification result
+      operationId: getResult
+      summary: Get classification result by classify_id
       responses:
         "200":
           description: A JSON object
@@ -339,12 +254,6 @@ components:
         namespace:
           type: string
           description: Kubernetes namespace
-    Health:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: State of the API
     GenericError:
       type: object
       example: { "success": false, "error": "" }
@@ -355,82 +264,265 @@ components:
         error:
           type: string
           description: Error message
-    Session:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: State of active session
-        tenant:
-          type: string
-          description: User tenant role
-
     ClassifyResult:
       type: object
+      description: ClassifyResult is a type structure used in the response of the endpoint `/classify?sync=true`.
       properties:
         id:
           type: string
-          description: Unique identifier for the classification result
-        accepted_at:
-          type: string
-          format: date-time
-          description: Timestamp when the classification was accepted
-        task:
-          $ref: "#/components/schemas/Task"
-    Task:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the task
+          description: The unique identifier of the result object.
+          example: "66448cfd56039e2eb7701009"
         parentId:
           type: string
-          description: Identifier of the parent task, if any
+          description: The unique identifier of the parent object.
+          example: "000000000000000000000000"
         cameraId:
           type: string
-          description: Identifier of the camera used for the video
+          description: The unique identifier of the camera.
+          example: "134188-VI01"
         analyse_id:
           type: integer
-          description: Identifier of the analysis
+          description: The identifier of the analysis.
+          example: 1134915906
         tenant:
           type: string
-          description: Tenant name
+          description: The identifier of the tenant.
+          example: "demo"
         duration:
           type: integer
-          description: Duration of the video in microseconds
+          description: The duration of the video in milliseconds.
+          example: 3042056
         duration_seconds:
           type: integer
-          description: Duration of the video in seconds
+          description: The duration of the video in seconds.
+          example: 3
         model:
           type: string
-          description: Model used for classification
+          description: The model used for the analysis.
+          example: "noname"
         version:
           type: string
-          description: Version of the model used for classification
+          description: The version of the model used for the analysis.
+          example: "2.0.16123"
         error_code:
           type: integer
-          description: Error code, if any, during the classification process
-        metadata:
-          type: object
-          additionalProperties: true
-          description: Metadata related to the video
-        gaard_result:
-          type: object
-          additionalProperties: true
-          description: Results from the classification process
+          description: Code indicating the error, if any.
+          example: 0
+        risk:
+          type: string
+          description: The risk determined by the analysis.
+          example: "intrusion"
         labels:
           type: array
+          description: The labels determined by the analysis.
           items:
             type: string
-          description: Array of labels generated from the classification
-        video_details:
+          example: ["intrusion", "person"]
+        scores:
           type: object
-          additionalProperties: true
-          description: Details about the video file
-        created:
+          description: The scores for each label.
+          properties:
+            spider:
+              type: number
+              format: float
+              example: 0.006814155539197582
+            animal:
+              type: number
+              format: float
+              example: 0.03490323977691366
+            plant:
+              type: number
+              format: float
+              example: 0.029940119760479042
+            vehicule:
+              type: number
+              format: float
+              example: 0.10077824836276382
+            text:
+              type: number
+              format: float
+              example: 0.0006343906582260771
+            web:
+              type: number
+              format: float
+              example: 0.008982035928143716
+            rain:
+              type: number
+              format: float
+              example: 0.0018018018018018014
+            wind:
+              type: number
+              format: float
+              example: 0.02095808383233533
+            NOTHING:
+              type: number
+              format: float
+              example: 0.0004909645916406409
+            flag:
+              type: number
+              format: float
+              example: 0.04917147676228464
+            intrusion:
+              type: number
+              format: float
+              example: 0.9730538922155688
+            other:
+              type: number
+              format: float
+              example: 0.028108597054560112
+            person:
+              type: number
+              format: float
+              example: 0.9730538922155688
+        video:
+          type: object
+          description: Details of the video.
+          properties:
+            videoname:
+              type: string
+              description: The name of the video file.
+              example: "video.mov"
+            filesize:
+              type: integer
+              description: The size of the video file in bytes.
+              example: 786800
+            specs:
+              type: object
+              description: Specifications of the video.
+              properties:
+                duration:
+                  type: number
+                  format: float
+                  description: The duration of the video.
+                  example: 4.217772
+                fps:
+                  type: number
+                  format: float
+                  description: Frames per second of the video.
+                  example: 3.082196003008223
+                original.nframes:
+                  type: integer
+                  description: The original number of frames in the video.
+                  example: 12
+                original.width:
+                  type: integer
+                  description: The original width of the video in pixels.
+                  example: 640
+                height:
+                  type: integer
+                  description: The height of the video in pixels.
+                  example: 320
+                nframes:
+                  type: integer
+                  description: The number of frames in the video.
+                  example: 13
+                original.fps:
+                  type: number
+                  format: float
+                  description: The original frames per second of the video.
+                  example: 3
+                original.height:
+                  type: integer
+                  description: The original height of the video in pixels.
+                  example: 360
+                width:
+                  type: integer
+                  description: The width of the video in pixels.
+                  example: 568
+        timing:
+          type: object
+          description: Timing details of the analysis.
+          properties:
+            traj.TRF:
+              type: number
+              format: float
+              example: 4.809535
+            nb.trf.threads:
+              type: integer
+              example: 1
+            pack.results:
+              type: number
+              format: float
+              example: 0.00066
+            nb.ukpik.threads:
+              type: integer
+              example: 1
+            obj.TRF:
+              type: number
+              format: float
+              example: 16.492315
+            cluster:
+              type: number
+              format: float
+              example: 106.054095
+            get.background:
+              type: number
+              format: float
+              example: 202.652742
+            total:
+              type: number
+              format: float
+              example: 2663.311597
+            tracking:
+              type: number
+              format: float
+              example: 0.129971
+            traj.agg:
+              type: number
+              format: float
+              example: 1.409457
+            pack.shape.features:
+              type: number
+              format: float
+              example: 0.082241
+            sub.cluster:
+              type: number
+              format: float
+              example: 10.086482
+            curv:
+              type: number
+              format: float
+              example: 117.828385
+            glob.agg:
+              type: number
+              format: float
+              example: 0.02619
+            pack.traj.features:
+              type: number
+              format: float
+              example: 0.923235
+            video.TRF:
+              type: number
+              format: float
+              example: 1.93995
+            add.obj.classif:
+              type: number
+              format: float
+              example: 0.190931
+            background.sub:
+              type: number
+              format: float
+              example: 2200.683568
+        metadata:
+          type: object
+          description: Additional optional data.
+          properties:
+            camera_id:
+              type: string
+              description: The unique identifier of the camera.
+              example: "VI01"
+            client_id:
+              type: string
+              description: The unique identifier of the client.
+              example: "134188"
+        created_at:
           type: string
           format: date-time
-          description: Timestamp when the task was created
-        started:
+          description: The timestamp when the analysis was created.
+          example: "2024-05-15T12:22:54.032628557+02:00"
+        started_at:
           type: string
           format: date-time
+          description: The timestamp when the analysis started.
+          example: "2024-05-15T12:22:54.032628727+02:00"
+
