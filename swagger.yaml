@@ -32,36 +32,11 @@ servers:
 
 tags:
   - description: Classification of analysis results
-    name: Classification
-  - description: Auth system endpoints
-    name: Auth
+    name: Vision
   - description: System related endpoints
     name: System
 
 paths:
-  /:
-    get:
-      tags:
-        - System
-      operationId: version
-      summary: Current build version
-      description: Returns current build version and node information for API service.
-      responses:
-        "200":
-          description: A JSON object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Version"
-              example:
-                {
-                  "tag": "8218",
-                  "node": "gaard-node1",
-                  "pod": "pub-677656cfc9-7tqc2",
-                  "build_at": "Wed Mar 25 10:28:17 UTC 2020",
-                  "model": "prod.model.20191018004336.rds",
-                  "namespace": "production",
-                }
   /version:
     get:
       tags:
@@ -91,7 +66,7 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Classification
+        - Vision
       summary: Classify a video
       description: Upload a video and its metadata for classification
       operationId: classifyVideo
@@ -209,7 +184,7 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Classification
+        - Vision
       parameters:
         - in: path
           name: classify_id
@@ -272,11 +247,7 @@ components:
           type: string
           description: The unique identifier of the result object.
           example: "66448cfd56039e2eb7701009"
-        parentId:
-          type: string
-          description: The unique identifier of the parent object.
-          example: "000000000000000000000000"
-        cameraId:
+        camera_id:
           type: string
           description: The unique identifier of the camera.
           example: "134188-VI01"
