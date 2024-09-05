@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Usage
+# > bin/get-result classify_id
+
+# Example
+# > bin/get-result 66448cfd56039e2eb7701009
+
+# To obtain the coassify_id, you can run the classification command using the script 'bin/post-video'.
+# The coassify_id can be found in the 'id' field of the response JSON.
+
+API_SERVER=${API_SERVER:="https://vision.gaard.ai/api"}
+FILENAME=$1
+
+if [[ -z "${API_KEY}" ]]; then
+  echo "API_KEY is not set. Use export API_KEY=... or .envrc to provide it"
+  exit 1
+fi
+
+if [[ -z "${FILENAME}" ]]; then
+  echo "FILENAME is not set. Please provide it as an argument"
+  exit 1
+fi
+
+ENDPOINT="$API_SERVER/avconv/original/serve.v2/$FILENAME"
+
+curl -X GET \
+-H "Authorization: Bearer $API_KEY" \
+-H "accept: application/json" \
+"$ENDPOINT"
+
