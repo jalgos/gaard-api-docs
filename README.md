@@ -59,6 +59,34 @@ Example
 bin/get-result 1254448
 ```
 
+### Get original video
+
+Usage
+
+```bash
+bin/get-original-video filename
+```
+
+Example
+
+```bash
+bin/get-original-video video.mov
+```
+
+### Get Highlighted video
+
+Usage
+
+```bash
+bin/get-highlighted-video filename
+```
+
+Example
+
+```bash
+bin/get-highlighted-video video.mov
+```
+
 ## Licenses
 
 An example `bin/video.mov` is a part of [The VIRAT Video Dataset](https://viratdata.org/)
