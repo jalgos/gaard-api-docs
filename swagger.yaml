@@ -37,6 +37,78 @@ tags:
     name: System
 
 paths:
+  /api/avconv/serve.v2/{filename}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Videos
+      summary: Serve Highlighted video file
+      description: Serves a highlighted video file based on the given filename.
+      parameters:
+        - name: filename
+          in: path
+          required: true
+          description: The name of the video file to be served.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Video file served successfully.
+          content:
+            video/mp4:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Video file not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+        "500":
+          description: Server side error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /api/avconv/original/serve.v2/{filename}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Videos
+      summary: Serve Original video file
+      description: Serves a original video file based on the given filename.
+      parameters:
+        - name: filename
+          in: path
+          required: true
+          description: The name of the video file to be served.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Video file served successfully.
+          content:
+            video/mp4:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Video file not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+        "500":
+          description: Server side error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
   /version:
     get:
       tags:
