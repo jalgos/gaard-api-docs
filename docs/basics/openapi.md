@@ -6,6 +6,6 @@ You can sync GitBook pages with an OpenAPI or Swagger file or a URL to include a
 
 GitBook's OpenAPI block is powered by [Scalar](https://scalar.com/), so you can test your APIs directly from your docs.
 
-{% swagger src="https://petstore3.swagger.io/api/v3/openapi.json" path="/user/login" method="get" %}
-[https://petstore3.swagger.io/api/v3/openapi.json](https://petstore3.swagger.io/api/v3/openapi.json)
+{% swagger src="https://raw.githubusercontent.com/jalgos/gaard-api-docs/master/swagger.yaml" path="/classify" method="post" %}
+[https://raw.githubusercontent.com/jalgos/gaard-api-docs/master/swagger.yaml](https://raw.githubusercontent.com/jalgos/gaard-api-docs/master/swagger.yaml)
 {% endswagger %}
