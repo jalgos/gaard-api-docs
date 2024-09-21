@@ -35,6 +35,8 @@ tags:
     name: Vision
   - description: System related endpoints
     name: System
+  - description: Videos related endpoints
+    name: Videos
 
 paths:
   /api/avconv/serve.v2/{filename}:
@@ -44,7 +46,9 @@ paths:
       tags:
         - Videos
       summary: Serve Highlighted video file
-      description: Serves a highlighted video file based on the given filename.
+      description: | 
+        The endpoint serves a video file to the client. It checks if a highlighted (processed) version of the video is available and, if not, converts the original video to MP4 format before serving it. 
+        This endpoint is useful for delivering video files in MP4 format to clients, ensuring that they are always served in a compatible format, regardless of the original format
       parameters:
         - name: filename
           in: path
@@ -80,7 +84,8 @@ paths:
       tags:
         - Videos
       summary: Serve Original video file
-      description: Serves a original video file based on the given filename.
+      description: |
+        The endpoint serves a original video file to the client. This endpoint is useful for delivering video files in MP4 format to clients, ensuring that they are always served in a compatible format, regardless of the original format
       parameters:
         - name: filename
           in: path
@@ -140,8 +145,23 @@ paths:
       tags:
         - Vision
       summary: Classify a video
-      description: Upload a video and its metadata for classification
+      description: |
+        This endpoint allows for video classification by submitting video files and optional metadata.
+        The classification can either be processed synchronously or asynchronously, based on the `sync` query parameter.
+
+        - **Synchronous Processing (`sync=true`)**: The server processes the video immediately and returns the classification result directly in the response. This is ideal for cases where immediate feedback is required.
+        - **Asynchronous Processing (`sync=false` or not provided)**: The classification is queued and processed in the background. The server returns an acknowledgment response with an `id` that can later be used to fetch the classification results once processing is complete.
+        
+        This endpoint is crucial for initiating the classification process of video files, providing flexibility based on your processing needs.
       operationId: classifyVideo
+      parameters:
+      - name: sync
+        in: query
+        required: false
+        schema:
+          type: boolean
+        description: |
+          Controls if the classification is processed synchronously (`sync=true`) or asynchronously (`sync=false` or not provided).
       requestBody:
         content:
           multipart/form-data:
@@ -164,86 +184,84 @@ paths:
         required: true
       responses:
         '200':
-          description: A JSON object
+          description: | 
+            If the classification is processed synchronously (`sync=true`), the response will be a JSON object containing the classification results.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClassifyResult"
               example: >
                 {
-                  "id": "66448cfd56039e2eb7701009",
-                  "parentId": "000000000000000000000000",
-                  "cameraId": "134188-VI01",
-                  "analyse_id": 1134915906,
-                  "tenant": "demo",
-                  "duration": 3042056,
-                  "duration_seconds": 3,
-                  "model": "noname",
+                  "id": "66e055a62a93a3fde9ba7ed6",
+                  "status": {
+                    "classify": "accepted",
+                    "video": "accepted"
+                  },
+                  "camera_id": "134188-VI08",
+                  "tenant": "on-premise",
+                  "duration": 1283465,
+                  "duration_seconds": 1,
+                  "model": "default",
                   "version": "2.0.16123",
                   "error_code": 0,
-                  "risk": "intrusion",
+                  "error_msg": "",
+                  "risk": "",
                   "labels": [
+                    "flag",
                     "intrusion",
-                    "person"
+                    "vehicule"
                   ],
                   "scores": {
-                    "spider": 0.006814155539197582,
-                    "animal": 0.03490323977691366,
-                    "plant": 0.029940119760479042,
-                    "vehicule": 0.10077824836276382,
-                    "text": 0.0006343906582260771,
-                    "web": 0.008982035928143716,
-                    "rain": 0.0018018018018018014,
-                    "wind": 0.02095808383233533,
-                    "NOTHING": 0.0004909645916406409,
-                    "flag": 0.04917147676228464,
-                    "intrusion": 0.9730538922155688,
-                    "other": 0.028108597054560112,
-                    "person": 0.9730538922155688
+                    "NOTHING": 0.00025552011262380115,
+                    "intrusion": 0.918744163159948,
+                    "person": 0.12695148061787767,
+                    "plant": 0.049358549524389075,
+                    "rain": 0.004554292405135713,
+                    "text": 0.000977604282076755,
+                    "web": 0.004425417528239508,
+                    "animal": 0.06220918576737605,
+                    "flag": 0.8295322694836862,
+                    "other": 0.020228226668765597,
+                    "spider": 0.00343773873185638,
+                    "vehicule": 0.8928721973019503,
+                    "wind": 0.007171697000292765
                   },
                   "video": {
-                    "videoname": "video.mov",
-                    "filesize": 786800,
+                    "videoname": "video.mp4",
+                    "filesize": 246792,
                     "specs": {
-                      "duration": 4.217772,
-                      "fps": 3.082196003008223,
-                      "original.nframes": 12,
-                      "original.width": 640,
+                      "original.height": 480,
+                      "original.nframes": 23,
+                      "width": 426,
+                      "fps": 2.608695652173913,
+                      "nframes": 6,
+                      "original.fps": 10,
+                      "duration": 2.3,
                       "height": 320,
-                      "nframes": 13,
-                      "original.fps": 3,
-                      "original.height": 360,
-                      "width": 568
+                      "original.width": 640
                     }
                   },
-                  "timing": {
-                    "traj.TRF": 4.809535,
-                    "nb.trf.threads": 1,
-                    "pack.results": 0.00066,
-                    "nb.ukpik.threads": 1,
-                    "obj.TRF": 16.492315,
-                    "cluster": 106.054095,
-                    "get.background": 202.652742,
-                    "total": 2663.311597,
-                    "tracking": 0.129971,
-                    "traj.agg": 1.409457,
-                    "pack.shape.features": 0.082241,
-                    "sub.cluster": 10.086482,
-                    "curv": 117.828385,
-                    "glob.agg": 0.02619,
-                    "pack.traj.features": 0.923235,
-                    "video.TRF": 1.93995,
-                    "add.obj.classif": 0.190931,
-                    "background.sub": 2200.683568
-                  },
                   "metadata": {
-                    "camera_id": "VI01",
-                    "client_id": "134188"
+                    "client_id": 134188,
+                    "code_msg": "VI08",
+                    "no_trans": "20818",
+                    "parc_origine": "XX"
                   },
-                  "created_at": "2024-05-15T12:22:54.032628557+02:00",
-                  "started_at": "2024-05-15T12:22:54.032628727+02:00"
+                  "created_at": "2024-09-10T14:20:22.519865154Z",
+                  "started_at": "2024-09-10T14:20:22.519865376Z"
                 }
-
+        "408":
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+        "412":
+          description: Precondition Failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
         "500":
           description: Server side error
           content:
@@ -263,16 +281,32 @@ paths:
           schema:
             type: string
           required: true
-          description: Numeric ID of the classification result
+          description: The classification id
       operationId: getResult
       summary: Get classification result by classify_id
+      description: |
+        The endpoint retrieves the classification result for a given `classify_id`. This ID is used to look up the 
+        classification task and return its status, results, and associated metadata. The response includes detailed information about the classification, 
+        including video specs, labels, risk assessments, and confidence scores.
       responses:
         "200":
-          description: A JSON object
+          description: If the classification task is found, the server will return a status code along with the classification result in JSON format.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClassifyResult"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
 
 components:
   securitySchemes:
@@ -319,6 +353,18 @@ components:
           type: string
           description: The unique identifier of the result object.
           example: "66448cfd56039e2eb7701009"
+        status:
+          type: object
+          description: Details of the status.
+          properties:
+            classify:
+              type: string
+              description: The classify status.
+              example: "accepted"
+            video:
+              type: string
+              description: The video status.
+              example: "accepted"
         camera_id:
           type: string
           description: The unique identifier of the camera.
@@ -472,80 +518,6 @@ components:
                   type: integer
                   description: The width of the video in pixels.
                   example: 568
-        timing:
-          type: object
-          description: Timing details of the analysis.
-          properties:
-            traj.TRF:
-              type: number
-              format: float
-              example: 4.809535
-            nb.trf.threads:
-              type: integer
-              example: 1
-            pack.results:
-              type: number
-              format: float
-              example: 0.00066
-            nb.ukpik.threads:
-              type: integer
-              example: 1
-            obj.TRF:
-              type: number
-              format: float
-              example: 16.492315
-            cluster:
-              type: number
-              format: float
-              example: 106.054095
-            get.background:
-              type: number
-              format: float
-              example: 202.652742
-            total:
-              type: number
-              format: float
-              example: 2663.311597
-            tracking:
-              type: number
-              format: float
-              example: 0.129971
-            traj.agg:
-              type: number
-              format: float
-              example: 1.409457
-            pack.shape.features:
-              type: number
-              format: float
-              example: 0.082241
-            sub.cluster:
-              type: number
-              format: float
-              example: 10.086482
-            curv:
-              type: number
-              format: float
-              example: 117.828385
-            glob.agg:
-              type: number
-              format: float
-              example: 0.02619
-            pack.traj.features:
-              type: number
-              format: float
-              example: 0.923235
-            video.TRF:
-              type: number
-              format: float
-              example: 1.93995
-            add.obj.classif:
-              type: number
-              format: float
-              example: 0.190931
-            background.sub:
-              type: number
-              format: float
-              example: 2200.683568
         metadata:
           type: object
           description: Additional optional data.
