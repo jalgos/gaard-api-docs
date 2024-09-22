@@ -37,8 +37,195 @@ tags:
     name: System
   - description: Videos related endpoints
     name: Videos
+  - description: Labels related endpoints
+    name: Labels
 
 paths:
+  /api/flow/labels:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Labels
+      summary: Add a label
+      description: |
+        This endpoint is used for setting or updating labels for a specific flow. This endpoint allows you to submit a request to update labels and associated metadata for a given video. 
+        If an id is provided in the URL or in the request body, it will be used to find or create a label entry. This endpoint also supports video backup operations.
+      operationId: addLabel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: The unique identifier for the classification result.
+                  example: "66e084db3610f76755482536"
+                videoName:
+                  type: string
+                  description: The name of the video file.
+                  example: "71935_RO8234817052024141219.mp4"
+                labels:
+                  type: array
+                  description: Labels assigned to the classification result.
+                  items:
+                    type: string
+                  example: ["p3", "p4"]
+                comment:
+                  type: string
+                  description: An optional comment related to the classification result.
+                  example: ""
+        required: true
+
+      responses:
+        '200':
+          description: |
+            The response will contain the updated or created label entry.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClassifyResult"
+        "500":
+          description: Server side error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /api/flow/labels/custom:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Labels
+      summary: Get custom labels
+      description: |
+        This endpoint is used to retrieve a list of custom labels. 
+        This is useful for getting predefined labels that can be used for classification or other purposes within your application.
+      operationId: getCustomLabels
+
+      responses:
+        '200':
+          description: If the custom labels are successfully updated, the response will indicate success.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomLabelsResult"
+        "500":
+          description: Server side error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Labels
+      summary: Add custom labels
+      description: |
+        This endpoint is designed for updating custom labels in the system. You need to provide a list of custom labels in the request body. 
+        The endpoint will process these labels, ensure there are no duplicates, and update the labels in the database. 
+        If the custom labels do not exist, they will be created.
+      operationId: addCustomLabels
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomLabelsResult"
+        required: true
+
+      responses:
+        '200':
+          description: If the custom labels are successfully updated, the response will indicate success.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResult"
+        "500":
+          description: Server side error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+  
+  /api/label:
+    options:
+      security:
+        - bearerAuth: []
+      tags:
+        - Labels
+      summary: Get available labels
+      description: |
+        This endpoint provides a list of standard and custom `labels` used for classification purposes. 
+        Labels are categorized into standard labels (predefined and commonly used) and custom labels (user-defined labels fetched from the database). 
+        The request is typically used to retrieve available labels for use in classification processes.
+      operationId: getAvailableLabels
+
+      responses:
+        '200':
+          description: |
+            The response will return a JSON object containing two lists: 
+            - `standard`: A list of predefined labels.
+            - `custom`: A list of custom labels retrieved from the database, excluding any duplicates or overlaps with the standard labels.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LabelsAllResult"
+        "500":
+          description: Server side error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+  
+  /api/label/{classify_id}:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Labels
+      summary: Set labels to classification
+      description: |
+        This endpoint is used to assign or update labels associated with a video classification task identified by `classify_id`. 
+        The labels are provided in the request body along with an optional comment. This endpoint processes the labels, saves them to the database, and optionally backs up the labeled video.
+      operationId: setLabelsToClassification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Schema for request body containing labels and a comment.
+              properties:
+                labels:
+                  type: array
+                  description: An array of labels to be applied.
+                  items:
+                    type: string
+                  example: ["custom"]
+                comment:
+                  type: string
+                  description: A comment regarding the request.
+                  example: "comment"
+              required:
+                - labels
+        required: true
+      responses:
+        '200':
+          description: | 
+            If the labels are successfully applied and saved, the server will return a JSON object containing the details of the classification task with the newly assigned labels.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LabelResult"
+        "500":
+          description: Server side error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
   /api/avconv/serve.v2/{filename}:
     get:
       security:
@@ -49,6 +236,7 @@ paths:
       description: | 
         The endpoint serves a video file to the client. It checks if a highlighted (processed) version of the video is available and, if not, converts the original video to MP4 format before serving it. 
         This endpoint is useful for delivering video files in MP4 format to clients, ensuring that they are always served in a compatible format, regardless of the original format
+      operationId: serveHighlightedVideoFile
       parameters:
         - name: filename
           in: path
@@ -86,6 +274,7 @@ paths:
       summary: Serve Original video file
       description: |
         The endpoint serves a original video file to the client. This endpoint is useful for delivering video files in MP4 format to clients, ensuring that they are always served in a compatible format, regardless of the original format
+      operationId: serveOriginalVideoFile
       parameters:
         - name: filename
           in: path
@@ -345,6 +534,13 @@ components:
         error:
           type: string
           description: Error message
+    SuccessResult:
+      type: object
+      example: { "success": true }
+      properties:
+        success:
+          type: boolean
+          description: State of operation
     ClassifyResult:
       type: object
       description: ClassifyResult is a type structure used in the response of the endpoint `/classify?sync=true`.
@@ -540,4 +736,138 @@ components:
           format: date-time
           description: The timestamp when the analysis started.
           example: "2024-05-15T12:22:54.032628727+02:00"
+    LabelResult:
+      type: object
+      description: LabelResult is a type structure used in the response for video classification results.
+      properties:
+        data:
+          type: object
+          description: The main content of the classification result.
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the result object.
+              example: "66e084db3610f76755482536"
+            analyseId:
+              type: integer
+              description: The identifier of the analysis.
+              example: 0
+            videoName:
+              type: string
+              description: The name of the video file.
+              example: "71935_RO8234817052024141219.mp4"
+            labels:
+              type: array
+              description: Labels determined by the analysis.
+              items:
+                type: string
+              example: ["p3", "p4"]
+            createdAt:
+              type: string
+              format: date-time
+              description: The timestamp when the result was created.
+              example: "2024-09-17T21:35:10.562818156Z"
+            userId:
+              type: string
+              description: The unique identifier of the user who submitted the request.
+              example: "000000000000000000000000"
+            backup:
+              type: boolean
+              description: Indicates if the result is backed up.
+              example: true
+            version:
+              type: string
+              description: The version of the system that processed the classification.
+              example: "2.0"
+            comment:
+              type: string
+              description: Additional comments or information related to the result.
+              example: ""
+        success:
+          type: boolean
+          description: Indicates whether the operation was successful.
+          example: true
+    CustomLabelsResult:
+      type: object
+      description: CustomLabelsResult is a structure that represents a set of custom labels with their values and descriptions.
+      properties:
+        labels:
+          type: array
+          description: An array of custom labels with their corresponding values.
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                description: The internal value of the label.
+                example: "false_intrusion"
+              label:
+                type: string
+                description: The display name of the label.
+                example: "false_intrusion"
+          example:
+            - value: "false_intrusion"
+              label: "false_intrusion"
+            - value: "custom"
+            - value: "person"
+              label: "person"
+            - value: "thermal"
+              label: "thermal"
+            - value: "vehicule"
+              label: "vehicule"
+            - value: "people:1"
+              label: "people:1"
+            - value: "p3"
+              label: "p3"
+            - value: "p2"
+              label: "p2"
+            - value: "text"
+              label: "text"
+            - value: "p1"
+              label: "p1"
+            - value: "p4"
+              label: "p4"
+            - value: "traffic"
+              label: "traffic"
+            - value: "plant"
+              label: "plant"
+            - value: "animal"
+              label: "animal"
+            - value: "flag"
+              label: "flag"
+    LabelsAllResult:
+      type: object
+      description: | 
+        Schema representing two sets of labels: standard and custom.
+      properties:
+        standard:
+          type: array
+          description: An array of standard labels.
+          items:
+            type: string
+          example:
+            - "animal"
+            - "flag"
+            - "person"
+            - "plant"
+            - "rain"
+            - "spider"
+            - "text"
+            - "vehicule"
+            - "web"
+            - "wind"
+            - "EMPTY"
+            - "FIX"
+            - "N/A"
+        custom:
+          type: array
+          description: An array of custom labels.
+          items:
+            type: string
+          example:
+            - "Gaard"
+            - "label1"
+            - "label2"
+            - "custom"
+
 
