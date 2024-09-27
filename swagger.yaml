@@ -3,7 +3,11 @@ info:
   contact:
     name: Gaard API
     url: "https://gaard.ai/"
+    email: "contact@ukpik.ai"
     x-twitter: JalgosAI
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
   description: |
     # Introduction
 
@@ -248,9 +252,8 @@ paths:
         - name: filename
           in: path
           required: true
-          description: The name of the video file to be served.
           schema:
-            type: string
+            $ref: "#/components/schemas/FilenameParam"
       responses:
         '200':
           description: Video file served successfully.
@@ -286,9 +289,8 @@ paths:
         - name: filename
           in: path
           required: true
-          description: The name of the video file to be served.
           schema:
-            type: string
+            $ref: "#/components/schemas/FilenameParam"
       responses:
         '200':
           description: Video file served successfully.
@@ -876,5 +878,7 @@ components:
             - "label1"
             - "label2"
             - "custom"
-
+    FilenameParam:
+      type: string
+      description: The name of the file to be served.
 
