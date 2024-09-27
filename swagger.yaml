@@ -191,6 +191,13 @@ paths:
         This endpoint is used to assign or update labels associated with a video classification task identified by `classify_id`. 
         The labels are provided in the request body along with an optional comment. This endpoint processes the labels, saves them to the database, and optionally backs up the labeled video.
       operationId: setLabelsToClassification
+      parameters:
+        - in: path
+          name: classify_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the classification task.
       requestBody:
         content:
           application/json:
@@ -467,10 +474,10 @@ paths:
       parameters:
         - in: path
           name: classify_id
+          required: true
           schema:
             type: string
-          required: true
-          description: The classification id
+          description: The ID of the classification task.
       operationId: getResult
       summary: Get classification result by classify_id
       description: |
