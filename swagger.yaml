@@ -252,6 +252,7 @@ paths:
         - name: filename
           in: path
           required: true
+          description: The name of the video file to be served.
           schema:
             $ref: "#/components/schemas/FilenameParam"
       responses:
@@ -289,6 +290,7 @@ paths:
         - name: filename
           in: path
           required: true
+          description: The name of the video file to be served.
           schema:
             $ref: "#/components/schemas/FilenameParam"
       responses:
