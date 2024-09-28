@@ -461,6 +461,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/GenericError"
 
+security:
+  - bearerAuth: []
 components:
   securitySchemes:
     bearerAuth:
