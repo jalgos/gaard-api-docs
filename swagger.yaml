@@ -60,26 +60,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  type: string
-                  description: The unique identifier for the classification result.
-                  example: "66e084db3610f76755482536"
-                videoName:
-                  type: string
-                  description: The name of the video file.
-                  example: "71935_RO8234817052024141219.mp4"
-                labels:
-                  type: array
-                  description: Labels assigned to the classification result.
-                  items:
-                    type: string
-                  example: ["p3", "p4"]
-                comment:
-                  type: string
-                  description: An optional comment related to the classification result.
-                  example: ""
+              $ref: '#/components/schemas/LabelRequest'
         required: true
 
       responses:
@@ -200,25 +181,13 @@ paths:
           name: classify_id
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/ClassifyIdParam"
           description: The ID of the classification task.
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              description: Schema for request body containing labels and a comment.
-              properties:
-                labels:
-                  type: array
-                  description: An array of labels to be applied.
-                  items:
-                    type: string
-                  example: ["custom"]
-                comment:
-                  type: string
-                  description: A comment regarding the request.
-                  example: "comment"
+              $ref: "#/components/schemas/SetLabelsRequest"
               required:
                 - labels
         required: true
@@ -261,8 +230,7 @@ paths:
           content:
             video/mp4:
               schema:
-                type: string
-                format: binary
+                $ref: "#/components/schemas/VideoFileResult"
         '404':
           description: Video file not found
           content:
@@ -299,8 +267,7 @@ paths:
           content:
             video/mp4:
               schema:
-                type: string
-                format: binary
+                $ref: "#/components/schemas/VideoFileResult"
         '404':
           description: Video file not found
           content:
@@ -359,28 +326,14 @@ paths:
         in: query
         required: false
         schema:
-          type: boolean
+          $ref: '#/components/schemas/SyncParam'
         description: |
           Controls if the classification is processed synchronously (`sync=true`) or asynchronously (`sync=false` or not provided).
       requestBody:
         content:
           multipart/form-data:
             schema:
-              type: object
-              properties:
-                video:
-                  type: string
-                  format: binary
-                  description: Video file to be classified
-                metadata:
-                  type: string
-                  format: binary
-                  description: Metadata file in JSON format
-                  example: >
-                    {
-                      "client_id": 134188,
-                      "camera_id": "VI01",
-                    }
+              $ref: '#/components/schemas/VideoClassificationRequest'
         required: true
       responses:
         '200':
@@ -480,7 +433,7 @@ paths:
           name: classify_id
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/ClassifyIdParam"
           description: The ID of the classification task.
       operationId: getResult
       summary: Get classification result by classify_id
@@ -880,7 +833,70 @@ components:
             - "label1"
             - "label2"
             - "custom"
+    VideoFileResult:
+      type: string
+      format: binary
     FilenameParam:
       type: string
       description: The name of the file to be served.
-
+    ClassifyIdParam:
+      type: string
+      description: The ID of the classification task.
+    SyncParam:
+      type: boolean
+      description: Controls if the classification is processed synchronously (`sync=true`) or asynchronously (`sync=false` or not provided).
+    LabelRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the classification result.
+          example: "66e084db3610f76755482536"
+        videoName:
+          type: string
+          description: The name of the video file.
+          example: "71935_RO8234817052024141219.mp4"
+        labels:
+          type: array
+          description: Labels assigned to the classification result.
+          items:
+            type: string
+          example:
+            - "p3"
+            - "p4"
+        comment:
+          type: string
+          description: An optional comment related to the classification result.
+          example: ""
+    SetLabelsRequest:
+      type: object
+      description: Schema for request body containing labels and a comment.
+      properties:
+        labels:
+          type: array
+          description: An array of labels to be applied.
+          items:
+            type: string
+          example:
+            - "custom"
+        comment:
+          type: string
+          description: A comment regarding the request.
+          example: "comment"
+    VideoClassificationRequest:
+      type: object
+      description: Schema for request body containing a video and a metadata.
+      properties:
+        video:
+          type: string
+          format: binary
+          description: Video file to be classified
+        metadata:
+          type: string
+          format: binary
+          description: Metadata file in JSON format
+          example: |
+            {
+              "client_id": 134188,
+              "camera_id": "VI01"
+            }
