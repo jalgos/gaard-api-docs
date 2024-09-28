@@ -78,6 +78,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClassifyResult"
+        "429":
+          description: "Rate Limit Exceeded"
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: "#/components/headers/X-Rate-Limit-Limit"
+            X-Rate-Limit-Remaining:
+              $ref: "#/components/headers/X-Rate-Limit-Remaining"
+            X-Rate-Limit-Reset:
+              $ref: "#/components/headers/X-Rate-Limit-Reset"
+            Retry-After:
+              $ref: "#/components/headers/Retry-After"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
         "500":
           description: Server side error
           content:
@@ -111,6 +126,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CustomLabelsResult"
+        "429":
+          description: "Rate Limit Exceeded"
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: "#/components/headers/X-Rate-Limit-Limit"
+            X-Rate-Limit-Remaining:
+              $ref: "#/components/headers/X-Rate-Limit-Remaining"
+            X-Rate-Limit-Reset:
+              $ref: "#/components/headers/X-Rate-Limit-Reset"
+            Retry-After:
+              $ref: "#/components/headers/Retry-After"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
         "500":
           description: Server side error
           content:
@@ -149,6 +179,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessResult"
+        "429":
+          description: "Rate Limit Exceeded"
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: "#/components/headers/X-Rate-Limit-Limit"
+            X-Rate-Limit-Remaining:
+              $ref: "#/components/headers/X-Rate-Limit-Remaining"
+            X-Rate-Limit-Reset:
+              $ref: "#/components/headers/X-Rate-Limit-Reset"
+            Retry-After:
+              $ref: "#/components/headers/Retry-After"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
         "500":
           description: Server side error
           content:
@@ -186,6 +231,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LabelsAllResult"
+        "429":
+          description: "Rate Limit Exceeded"
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: "#/components/headers/X-Rate-Limit-Limit"
+            X-Rate-Limit-Remaining:
+              $ref: "#/components/headers/X-Rate-Limit-Remaining"
+            X-Rate-Limit-Reset:
+              $ref: "#/components/headers/X-Rate-Limit-Reset"
+            Retry-After:
+              $ref: "#/components/headers/Retry-After"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
         "500":
           description: Server side error
           content:
@@ -234,6 +294,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LabelResult"
+        "429":
+          description: "Rate Limit Exceeded"
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: "#/components/headers/X-Rate-Limit-Limit"
+            X-Rate-Limit-Remaining:
+              $ref: "#/components/headers/X-Rate-Limit-Remaining"
+            X-Rate-Limit-Reset:
+              $ref: "#/components/headers/X-Rate-Limit-Reset"
+            Retry-After:
+              $ref: "#/components/headers/Retry-After"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
         "500":
           description: Server side error
           content:
@@ -282,6 +357,21 @@ paths:
               $ref: '#/components/headers/X-Rate-Limit-Remaining'
             X-Rate-Limit-Reset:
               $ref: '#/components/headers/X-Rate-Limit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+        "429":
+          description: "Rate Limit Exceeded"
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: "#/components/headers/X-Rate-Limit-Limit"
+            X-Rate-Limit-Remaining:
+              $ref: "#/components/headers/X-Rate-Limit-Remaining"
+            X-Rate-Limit-Reset:
+              $ref: "#/components/headers/X-Rate-Limit-Reset"
+            Retry-After:
+              $ref: "#/components/headers/Retry-After"
           content:
             application/json:
               schema:
@@ -337,6 +427,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GenericError"
+        "429":
+          description: "Rate Limit Exceeded"
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: "#/components/headers/X-Rate-Limit-Limit"
+            X-Rate-Limit-Remaining:
+              $ref: "#/components/headers/X-Rate-Limit-Remaining"
+            X-Rate-Limit-Reset:
+              $ref: "#/components/headers/X-Rate-Limit-Reset"
+            Retry-After:
+              $ref: "#/components/headers/Retry-After"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
         "500":
           description: Server side error
           content:
@@ -374,6 +479,21 @@ paths:
                   "model": "prod.model.20191018004336.rds",
                   "namespace": "production",
                 }
+        "429":
+          description: "Rate Limit Exceeded"
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: "#/components/headers/X-Rate-Limit-Limit"
+            X-Rate-Limit-Remaining:
+              $ref: "#/components/headers/X-Rate-Limit-Remaining"
+            X-Rate-Limit-Reset:
+              $ref: "#/components/headers/X-Rate-Limit-Reset"
+            Retry-After:
+              $ref: "#/components/headers/Retry-After"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
 
   /classify:
     post:
@@ -506,6 +626,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GenericError"
+        "429":
+          description: "Rate Limit Exceeded"
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: "#/components/headers/X-Rate-Limit-Limit"
+            X-Rate-Limit-Remaining:
+              $ref: "#/components/headers/X-Rate-Limit-Remaining"
+            X-Rate-Limit-Reset:
+              $ref: "#/components/headers/X-Rate-Limit-Reset"
+            Retry-After:
+              $ref: "#/components/headers/Retry-After"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
         "500":
           description: Server side error
           content:
@@ -572,6 +707,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GenericError"
+        "429":
+          description: "Rate Limit Exceeded"
+          headers:
+            X-Rate-Limit-Limit:
+              $ref: "#/components/headers/X-Rate-Limit-Limit"
+            X-Rate-Limit-Remaining:
+              $ref: "#/components/headers/X-Rate-Limit-Remaining"
+            X-Rate-Limit-Reset:
+              $ref: "#/components/headers/X-Rate-Limit-Reset"
+            Retry-After:
+              $ref: "#/components/headers/Retry-After"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
 
 security:
   - bearerAuth: []
@@ -591,6 +741,10 @@ components:
         type: integer
     X-Rate-Limit-Reset:
       description: "The remaining time in seconds until the rate limit resets"
+      schema:
+        type: integer
+    Retry-After:
+      description: "The time in seconds after which the client can retry the request"
       schema:
         type: integer
   schemas:
