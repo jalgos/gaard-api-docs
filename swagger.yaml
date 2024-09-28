@@ -494,6 +494,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GenericError"
+        "500":
+          description: Server side error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
 
   /classify:
     post:
@@ -718,6 +725,12 @@ paths:
               $ref: "#/components/headers/X-Rate-Limit-Reset"
             Retry-After:
               $ref: "#/components/headers/Retry-After"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+        "500":
+          description: Server side error
           content:
             application/json:
               schema:
